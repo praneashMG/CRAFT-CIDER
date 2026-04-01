@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/assets/fav.jpg" type="image/jpeg">
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <title>Orchardix | Member Dashboard — Craft Cider & Meadery</title>
+
+<script src="tailwind.js"></script>    <style>
+        /* --- Orchardix Forest & Amber Palette (exactly from index.html) --- */
+        :root, html[data-theme='light'] {
+            --color-background: #FFFFFF;
+            --color-primary-text: #000000;
+            --color-secondary-text: #4A4A4A;
+            --color-accent: #1F3D2B;      /* Dark Forest Green */
+            --color-accent-light: #E6B325; /* Golden Amber */
+            --color-border: #E5E7EB;
+            --color-hover: #F1F5F2;        /* Soft Forest Tint */
+            --color-card-bg: #FFFFFF;
+            --color-sidebar-bg: #F8FAFC;
+            --color-success: #2C6E2F;
+            --color-warning: #E6B325;
+            --color-danger: #B43B2E;
+        }
+        html[data-theme='dark'] {
+            --color-background: #0D1A12;
+            --color-primary-text: #FFFFFF;
+            --color-secondary-text: #BDBDBD;
+            --color-accent: #2D5A3F;
+            --color-accent-light: #E6B325;
+            --color-border: #1B2E23;
+            --color-hover: #1B2E23;
+            --color-card-bg: #111B14;
+            --color-sidebar-bg: #0A130E;
+            --color-success: #3A8B3E;
+            --color-warning: #E6B325;
+            --color-danger: #CD5C4B;
+        }
+
+        body {
+            background-color: var(--color-background);
+            color: var(--color-primary-text);
+            font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+            overflow-x: hidden;
+        }
+
+        /* Utility Classes */
+        .text-accent { color: var(--color-accent); }
+        .text-accent-light { color: var(--color-accent-light); }
+        .bg-background { background-color: var(--color-background); }
+        .bg-hover { background-color: var(--color-hover); }
+        .border-border { border-color: var(--color-border); }
+        .card-bg { background-color: var(--color-card-bg); }
+        .bg-sidebar { background-color: var(--color-sidebar-bg); }
+
+        /* Dashboard Cards */
+        .dashboard-card {
+            background-color: var(--color-card-bg);
+            border: 1px solid var(--color-border);
+            border-radius: 1.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px -8px rgba(31, 61, 43, 0.08);
+        }
+        .dashboard-card:hover {
+            border-color: var(--color-accent-light);
+            box-shadow: 0 12px 28px -12px rgba(230, 179, 37, 0.2);
+        }
+
+        /* Forest Gradient (from index.html) */
+        .bg-forest-gradient {
+            background: linear-gradient(135deg, #1F3D2B 0%, #2D5A3F 100%);
+        }
+        .bg-amber-gradient {
+            background: linear-gradient(135deg, #E6B325 0%, #F4D06F 100%);
+        }
+
+        /* Status Pulse */
+        .status-pulse {
+            width: 10px;
+            height: 10px;
+            background-color: var(--color-success);
+            border-radius: 50%;
+            box-shadow: 0 0 0 0 rgba(44, 110, 47, 0.5);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 70% { box-shadow: 0 0 0 6px rgba(44, 110, 47, 0); } }
+
+        /* Sidebar Navigation */
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1rem;
+            border-radius: 1rem;
+            color: var(--color-secondary-text);
+            transition: all 0.2s ease;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            cursor: pointer;
+        }
+        .sidebar-link:hover, .sidebar-link.active {
+            background: linear-gradient(135deg, var(--color-accent), #2D5A3F);
+            color: white;
+        }
+        .sidebar-link:hover svg, .sidebar-link.active svg {
+            stroke: white;
+        }
+        .sidebar-link.logout:hover {
+            background: var(--color-danger);
+        }
+
+        /* Badges */
+        .badge-success { background: rgba(44,110,47,0.12); color: var(--color-success); }
+        .badge-warning { background: rgba(230,179,37,0.12); color: var(--color-accent-light); }
+        .badge-danger { background: rgba(180,59,46,0.12); color: var(--color-danger); }
+
+        /* RTL Support */
+        html[dir="rtl"] .sidebar-link { flex-direction: row-reverse; }
+        html[dir="rtl"] .ml-auto { margin-right: auto; margin-left: 0; }
+
+        /* Scroll Reveal Animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Mobile Overlay */
+        #mobile-overlay {
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            position: fixed;
+            inset: 0;
+            z-index: 55;
+        }
+        #mobile-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Custom Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar { width: 5px; height: 5px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--color-accent-light); border-radius: 10px; }
+
+        /* Amber Button Style */
+        .btn-amber {
+            background: var(--color-accent-light);
+            color: var(--color-accent);
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .btn-amber:hover {
+            background: #F0C14B;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(230, 179, 37, 0.3);
+        }
+        .btn-outline {
+            border: 1px solid var(--color-border);
+            transition: all 0.2s;
+        }
+        .btn-outline:hover {
+            border-color: var(--color-accent-light);
+            background: var(--color-hover);
+        }
+    </style>
+</head>
+<body class="antialiased bg-background">
+
+    <!-- TOP NAVIGATION BAR (matches index.html style) -->
+    <header class="sticky top-0 z-50 bg-background border-b border-border transition-colors">
+        <div class="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <div class="flex items-center justify-between">
+                <!-- Left: Logo & Mobile Menu -->
+                <div class="flex items-center gap-4">
+                    <button id="mobile-menu-toggle" class="lg:hidden p-2 rounded-xl hover:bg-hover transition">
+                        <svg class="w-6 h-6 text-primary-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                    <a href="index.html" class="text-2xl md:text-3xl font-serif font-extrabold tracking-tight">
+                        <span class="text-accent-light">Orchardix</span>
+                    </a>
+                </div>
+
+                <!-- Right: Utilities -->
+                <div class="flex items-center gap-3 sm:gap-4">
+                    <button id="lang-toggle" class="p-2 rounded-full hover:bg-hover transition" title="Toggle RTL/LTR">
+                        <svg class="w-5 h-5 text-primary-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-width="2" d="M12 3a9 9 0 100 18 9 9 0 000-18zm0 0c2.5 2.8 2.5 12.2 0 15m0-15c-2.5 2.8-2.5 12.2 0 15M3 12h18" />
+                        </svg>
+                    </button>
+
+                    <button id="theme-toggle" class="p-2 rounded-full hover:bg-hover transition">
+                        <svg class="w-5 h-5 light-icon text-primary-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                        <svg class="w-5 h-5 dark-icon hidden text-primary-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                        </svg>
+                    </button>
+
+                    <!-- User Profile with Pulse -->
+                    <div class="flex items-center gap-2 pl-3 border-l border-border">
+                        <div class="relative">
+                            <div class="w-9 h-9 rounded-full bg-forest-gradient flex items-center justify-center text-white font-bold">
+                                EV
+                            </div>
+                            <span class="absolute bottom-0 right-0 status-pulse"></span>
+                        </div>
+                        <div class="hidden sm:block">
+                            <p class="text-sm font-medium">Eleanor Vance</p>
+                            <p class="text-xs text-secondary-text">Gold Member</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MOBILE OVERLAY -->
+    <div id="mobile-overlay" class="lg:hidden"></div>
+
+    <!-- MAIN DASHBOARD LAYOUT -->
+    <main class="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div class="flex flex-col lg:flex-row gap-6">
+
+            <!-- SIDEBAR (Forest Theme) -->
+            <aside id="sidebar" class="fixed lg:sticky top-0 lg:top-24 left-0 h-full lg:h-fit w-80 z-[60] lg:z-10 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 bg-sidebar lg:bg-transparent">
+                <div class="dashboard-card p-5 h-full lg:h-auto overflow-y-auto">
+                    <!-- Mobile Sidebar Header -->
+                    <div class="flex lg:hidden justify-between items-center mb-6">
+                        <span class="font-bold text-accent-light">Orchard Menu</span>
+                        <button id="close-sidebar" class="p-2 hover:bg-hover rounded-lg">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- User Info -->
+                    <div class="flex items-center gap-3 pb-5 mb-4 border-b border-border">
+                        <div class="w-12 h-12 rounded-full bg-forest-gradient flex items-center justify-center text-white font-bold text-xl">
+                            EV
+                        </div>
+                        <div>
+                            <p class="font-serif font-bold">Eleanor Vance</p>
+                            <p class="text-xs text-secondary-text">eleanor@orchardix.com</p>
+                        </div>
+                    </div>
+
+                    <!-- Navigation Links -->
+                    <nav class="flex flex-col gap-1">
+                        <p class="text-xs uppercase tracking-wider text-secondary-text font-bold px-3 mb-2">Cellar Menu</p>
+                        
+                        <a href="#" data-section="profile" class="sidebar-link active">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                            <span>My Profile</span>
+                        </a>
+
+                        <a href="#" data-section="orders" class="sidebar-link">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                            </svg>
+                            <span>Order History</span>
+                        </a>
+
+                        <a href="#" data-section="tastings" class="sidebar-link">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <span>Tastings & Events</span>
+                            <span class="ml-auto bg-accent-light text-accent text-xs px-2 py-0.5 rounded-full">2</span>
+                        </a>
+
+                        <a href="#" data-section="club" class="sidebar-link">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                            </svg>
+                            <span>Cider Club</span>
+                        </a>
+
+                        <a href="#" data-section="rewards" class="sidebar-link">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span>Rewards</span>
+                        </a>
+
+                        <a href="#" data-section="settings" class="sidebar-link">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            <span>Settings</span>
+                        </a>
+
+                        <a href="#" data-section="logout" class="sidebar-link logout mt-4">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                            </svg>
+                            <span>Logout</span>
+                        </a>
+                    </nav>
+                </div>
+            </aside>
+
+            <!-- MAIN CONTENT AREA -->
+            <div class="flex-1 min-w-0 space-y-6">
+
+                <!-- PROFILE SECTION -->
+                <div id="profile" class="user-section">
+                    <div class="dashboard-card p-6 reveal">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                            <h2 class="text-2xl font-serif font-bold">
+                                <span class="text-accent-light">🍎</span> My Profile
+                            </h2>
+                            <button class="px-6 py-2 bg-forest-gradient text-white rounded-xl hover:shadow-lg transition text-sm font-bold">
+                                Edit Profile
+                            </button>
+                        </div>
+
+                        <div class="flex flex-col md:flex-row gap-8">
+                            <div class="relative mx-auto md:mx-0">
+                                <div class="w-28 h-28 rounded-full bg-forest-gradient flex items-center justify-center text-white text-3xl font-bold shadow-lg">
+                                    EV
+                                </div>
+                                <span class="absolute bottom-1 right-1 w-5 h-5 bg-emerald-500 border-4 border-white dark:border-black rounded-full"></span>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 flex-1">
+                                <div><p class="text-xs text-secondary-text uppercase tracking-wider mb-1">Full Name</p><p class="font-semibold">Eleanor Vance</p></div>
+                                <div><p class="text-xs text-secondary-text uppercase tracking-wider mb-1">Email</p><p class="font-semibold">eleanor@orchardix.com</p></div>
+                                <div><p class="text-xs text-secondary-text uppercase tracking-wider mb-1">Member Since</p><p class="font-semibold">March 2023</p></div>
+                                <div><p class="text-xs text-secondary-text uppercase tracking-wider mb-1">Member Tier</p><p class="font-semibold text-accent-light">Gold Member</p></div>
+                                <div><p class="text-xs text-secondary-text uppercase tracking-wider mb-1">Total Orders</p><p class="font-semibold">14 bottles</p></div>
+                                <div><p class="text-xs text-secondary-text uppercase tracking-wider mb-1">Reward Points</p><p class="font-semibold">1,280 pts</p></div>
+                            </div>
+                        </div>
+
+                        <div class="mt-8 flex flex-wrap gap-2">
+                            <span class="px-3 py-1 bg-hover border border-border rounded-full text-xs font-medium">🍯 Mead Enthusiast</span>
+                            <span class="px-3 py-1 bg-hover border border-border rounded-full text-xs font-medium">🍎 Cider Collector</span>
+                            <span class="px-3 py-1 bg-hover border border-border rounded-full text-xs font-medium">⭐ Verified Member</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6">
+                        <div class="dashboard-card p-6 reveal">
+                            <p class="text-accent-light text-xs uppercase tracking-wider font-bold">Lifetime Spending</p>
+                            <p class="text-3xl font-black mt-2">$1,247</p>
+                            <div class="flex items-center gap-2 mt-2 text-sm">
+                                <span class="text-emerald-500">↑ 23%</span>
+                                <span class="text-secondary-text">from last year</span>
+                            </div>
+                        </div>
+                        <div class="dashboard-card p-6 reveal">
+                            <p class="text-accent-light text-xs uppercase tracking-wider font-bold">Next Tasting</p>
+                            <p class="text-xl font-bold mt-2">Spring Cider Flight</p>
+                            <p class="text-sm text-secondary-text mt-1">May 10, 2026 · Orchard Hall</p>
+                            <button class="mt-4 text-xs font-bold text-accent-light hover:underline">View Details →</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ORDER HISTORY SECTION -->
+                <div id="orders" class="user-section hidden">
+                    <div class="dashboard-card p-6 reveal">
+                        <h2 class="text-2xl font-serif font-bold mb-6">
+                            <span class="text-accent-light">📦</span> Order History
+                        </h2>
+                        <div class="overflow-x-auto custom-scrollbar">
+                            <table class="w-full text-sm">
+                                <thead class="border-b border-border text-secondary-text text-xs uppercase tracking-wider">
+                                    <tr><th class="pb-3 text-left">Order ID</th><th class="pb-3 text-left">Product</th><th class="pb-3 text-left">Date</th><th class="pb-3 text-left">Amount</th><th class="pb-3 text-left">Status</th><th class="pb-3 text-left"></th></tr>
+                                </thead>
+                                <tbody class="divide-y divide-border">
+                                    <tr><td class="py-4 font-medium">#OR-2387</td><td class="py-4">Oak Aged Apple Cider</td><td class="py-4 text-secondary-text">Apr 12, 2026</td><td class="py-4">$42</td><td class="py-4"><span class="badge-success px-3 py-1 rounded-full text-xs font-bold">Delivered</span></td><td class="py-4"><button class="text-accent-light hover:underline text-xs">Details</button></td></tr>
+                                    <tr><td class="py-4 font-medium">#OR-2389</td><td class="py-4">Wildflower Honey Mead</td><td class="py-4 text-secondary-text">Apr 05, 2026</td><td class="py-4">$58</td><td class="py-4"><span class="badge-warning px-3 py-1 rounded-full text-xs font-bold">Bottling</span></td><td class="py-4"><button class="text-accent-light hover:underline text-xs">Track</button></td></tr>
+                                    <tr><td class="py-4 font-medium">#OR-2384</td><td class="py-4">Heritage Reserve Cider</td><td class="py-4 text-secondary-text">Mar 18, 2026</td><td class="py-4">$89</td><td class="py-4"><span class="badge-success px-3 py-1 rounded-full text-xs font-bold">Delivered</span></td><td class="py-4"><button class="text-accent-light hover:underline text-xs">Review</button></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="mt-6"><button class="text-accent-light font-bold hover:underline text-sm">View All Orders →</button></div>
+                    </div>
+                </div>
+
+                <!-- TASTINGS SECTION -->
+                <div id="tastings" class="user-section hidden">
+                    <div class="dashboard-card p-6 reveal">
+                        <h2 class="text-2xl font-serif font-bold mb-4"><span class="text-accent-light">🍷</span> Upcoming Tastings</h2>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-4 border border-border rounded-xl hover:border-accent-light transition"><div><p class="font-bold">Spring Cider Flight</p><p class="text-xs text-secondary-text">May 10, 2026 · 4:00 PM · Orchard Hall</p></div><button class="btn-amber px-4 py-2 rounded-lg text-sm">Reserve</button></div>
+                            <div class="flex items-center justify-between p-4 border border-border rounded-xl hover:border-accent-light transition"><div><p class="font-bold">Honey Mead Workshop</p><p class="text-xs text-secondary-text">May 22, 2026 · 2:00 PM · Mead Cellar</p></div><button class="btn-amber px-4 py-2 rounded-lg text-sm">Book Now</button></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CIDER CLUB SECTION -->
+                <div id="club" class="user-section hidden">
+                    <div class="bg-forest-gradient text-white rounded-2xl p-8 shadow-xl">
+                        <div class="flex items-center gap-3 mb-4"><i class="fas fa-crown text-accent-light text-4xl"></i><h2 class="text-3xl font-serif font-bold">Orchard Cider Club</h2></div>
+                        <p>Exclusive quarterly releases, members-only events, and 10% off all orders.</p>
+                        <div class="mt-6 bg-white/10 rounded-xl p-4"><span class="font-bold">Your Tier: Gold Member</span><div class="w-full bg-white/20 h-2 rounded-full mt-2"><div class="bg-accent-light h-2 rounded-full w-2/3"></div></div><p class="text-sm mt-2">2 more purchases to reach Elite (15% off)</p></div>
+                    </div>
+                </div>
+
+                <!-- REWARDS SECTION -->
+                <div id="rewards" class="user-section hidden">
+                    <div class="dashboard-card p-6 reveal">
+                        <h2 class="text-2xl font-serif font-bold mb-2"><span class="text-accent-light">💎</span> Reward Points</h2>
+                        <div class="flex flex-wrap items-center gap-6 mt-4"><div class="text-5xl font-black text-accent-light">1,280</div><div><p class="text-sm text-secondary-text">Redeem for discounts, exclusive mead bottles, or private tastings.</p><button class="mt-3 btn-amber px-5 py-2 rounded-full text-sm font-bold">Redeem Points</button></div></div>
+                    </div>
+                </div>
+
+                <!-- SETTINGS SECTION -->
+                <div id="settings" class="user-section hidden">
+                    <div class="dashboard-card p-6 reveal">
+                        <h2 class="text-2xl font-serif font-bold mb-6"><span class="text-accent-light">⚙️</span> Account Settings</h2>
+                        <div class="space-y-6">
+                            <div class="flex items-center justify-between py-4 border-b border-border"><div><p class="font-bold">Email Notifications</p><p class="text-sm text-secondary-text">Order updates and exclusive offers</p></div><label class="relative inline-flex cursor-pointer"><input type="checkbox" class="sr-only peer" checked><div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent"></div></label></div>
+                            <div class="flex items-center justify-between py-4 border-b border-border"><div><p class="font-bold">SMS Alerts</p><p class="text-sm text-secondary-text">Tasting reminders and delivery updates</p></div><label class="relative inline-flex cursor-pointer"><input type="checkbox" class="sr-only peer"><div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent"></div></label></div>
+                            <div class="flex gap-4 pt-4"><button class="px-6 py-2 btn-amber rounded-xl text-sm font-bold">Save Changes</button><button class="px-6 py-2 btn-outline rounded-xl text-sm font-bold hover:border-accent-light">Reset Password</button></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LOGOUT SECTION -->
+                <div id="logout" class="user-section hidden">
+                    <div class="dashboard-card p-10 reveal text-center max-w-lg mx-auto">
+                        <div class="w-20 h-20 mx-auto bg-accent/10 rounded-full flex items-center justify-center text-accent-light text-3xl mb-6"><i class="fas fa-sign-out-alt text-3xl"></i></div>
+                        <h2 class="text-2xl font-serif font-bold">Leave the Orchard?</h2>
+                        <p class="text-secondary-text mt-3">Your session will end and you'll be signed out.</p>
+                        <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+                            <button onclick="window.location.href='login.html'" class="px-8 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition text-sm font-bold">Yes, Sign Out</button>
+                            <button onclick="activateSection('profile')" class="px-8 py-3 border border-border rounded-xl hover:bg-hover transition text-sm font-bold">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ACTIVE SESSION BANNER (Forest) -->
+                <div class="bg-forest-gradient rounded-2xl p-6 text-white flex items-center justify-between reveal">
+                    <div class="flex items-center gap-4"><span class="w-3 h-3 bg-accent-light rounded-full animate-ping"></span><div><p class="font-bold">Active Cellar Session</p><p class="text-sm text-white/80">Connected to Orchardix member services</p></div></div>
+                    <div class="text-sm font-bold bg-accent-light/20 px-4 py-2 rounded-xl">Next Delivery: Apr 28</div>
+                </div>
+
+                <footer class="text-center text-xs text-secondary-text border-t border-border pt-8 pb-4">
+                    <p>© 2026 Orchardix — Craft Cider & Meadery. Rooted in Nature, Crafted with Passion.</p>
+                    <div class="flex justify-center gap-6 mt-4"><a href="#" class="hover:text-accent-light transition">Privacy</a><a href="#" class="hover:text-accent-light transition">Terms</a><a href="#" class="hover:text-accent-light transition">Cellar Support</a></div>
+                </footer>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        (function() {
+            // Theme Toggle
+            const themeToggle = document.getElementById('theme-toggle');
+            const html = document.documentElement;
+            function setTheme(theme) {
+                html.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+                document.querySelectorAll('.light-icon').forEach(i => i.classList.toggle('hidden', theme === 'dark'));
+                document.querySelectorAll('.dark-icon').forEach(i => i.classList.toggle('hidden', theme === 'light'));
+            }
+            setTheme(localStorage.getItem('theme') || 'light');
+            themeToggle?.addEventListener('click', () => setTheme(html.getAttribute('data-theme') === 'light' ? 'dark' : 'light'));
+
+            // RTL Toggle
+            const langToggle = document.getElementById('lang-toggle');
+            function setDirection(dir) { html.setAttribute('dir', dir); localStorage.setItem('language', dir === 'rtl' ? 'ar' : 'en'); }
+            setDirection(localStorage.getItem('language') === 'ar' ? 'rtl' : 'ltr');
+            langToggle?.addEventListener('click', () => setDirection(html.getAttribute('dir') === 'ltr' ? 'rtl' : 'ltr'));
+
+            // Mobile Menu
+            const menuToggle = document.getElementById('mobile-menu-toggle'), closeSide = document.getElementById('close-sidebar'), sidebar = document.getElementById('sidebar'), overlay = document.getElementById('mobile-overlay');
+            function toggleMobile(open) { sidebar.classList.toggle('-translate-x-full', !open); overlay.classList.toggle('active', open); document.body.style.overflow = open ? 'hidden' : ''; }
+            menuToggle?.addEventListener('click', () => toggleMobile(true)); closeSide?.addEventListener('click', () => toggleMobile(false)); overlay?.addEventListener('click', () => toggleMobile(false));
+
+            // Section Navigation
+            const sections = ['profile', 'orders', 'tastings', 'club', 'rewards', 'settings', 'logout'];
+            const links = document.querySelectorAll('.sidebar-link');
+            window.activateSection = function(sectionId) {
+                sections.forEach(id => document.getElementById(id)?.classList.add('hidden'));
+                document.getElementById(sectionId)?.classList.remove('hidden');
+                links.forEach(link => { link.classList.remove('active'); if(link.dataset.section === sectionId) link.classList.add('active'); });
+                if (window.innerWidth < 1024) toggleMobile(false);
+            };
+            links.forEach(link => { if(link.dataset.section) link.addEventListener('click', (e) => { e.preventDefault(); activateSection(link.dataset.section); }); });
+
+            // Scroll Reveal
+            const observer = new IntersectionObserver((entries) => entries.forEach(e => e.isIntersecting && e.target.classList.add('active')), { threshold: 0.1 });
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        })();
+    </script>
+</body>
+</html>

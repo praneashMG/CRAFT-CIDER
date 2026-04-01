@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found | Orchardix</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        /* --- CSS Variables (Exact same Forest & Amber Palette) --- */
+        :root, html[data-theme='light'] {
+            --color-background: #FFFFFF;
+            --color-primary-text: #000000;
+            --color-secondary-text: #4A4A4A;
+            --color-accent: #1F3D2B; /* Dark Forest Green */
+            --color-accent-light: #E6B325; /* Golden Amber */
+            --color-border: #E5E7EB;
+            --color-hover: #F1F5F2;
+        }
+        html[data-theme='dark'] {
+            --color-background: #0D1A12; /* Deep Forest Black */
+            --color-primary-text: #FFFFFF;
+            --color-secondary-text: #BDBDBD;
+            --color-accent: #2D5A3F; /* Lighter Forest */
+            --color-accent-light: #E6B325;
+            --color-border: #1B2E23;
+            --color-hover: #1B2E23;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--color-background);
+            color: var(--color-primary-text);
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 2rem;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Subtle organic background pattern */
+        body::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(circle at 10% 20%, var(--color-accent-light) 0.5px, transparent 0.5px);
+            background-size: 28px 28px;
+            opacity: 0.05;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Main container - no header/footer influence */
+        .error-container {
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            animation: fadeInUp 0.8s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+     .brand-logo {
+    display: inline-block;
+    margin-bottom: 2.5rem;
+    transition: transform 0.3s ease;
+
+    text-decoration: none;   /* ✅ REMOVE underline */
+    color: inherit;          /* ✅ REMOVE blue color */
+}
+
+.brand-logo:hover,
+.brand-logo:focus,
+.brand-logo:active {
+    text-decoration: none;   /* ✅ make sure it never comes back */
+    color: inherit;
+}
+        .logo-text {
+            font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+            font-size: 3.2rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, var(--color-accent-light) 0%, #F4C542 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .logo-text span {
+            background: none;
+            color: var(--color-accent-light);
+            background-clip: unset;
+            -webkit-background-clip: unset;
+        }
+
+        /* Main 404 illustration */
+        .error-code {
+            font-size: 10rem;
+            font-weight: 800;
+            line-height: 1;
+            margin: 1rem 0 0.5rem;
+            background: linear-gradient(145deg, var(--color-accent-light) 20%, var(--color-accent) 80%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.03em;
+            text-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        @media (min-width: 640px) {
+            .error-code {
+                font-size: 13rem;
+            }
+        }
+
+        .title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-top: 0.5rem;
+            margin-bottom: 1.2rem;
+            color: var(--color-primary-text);
+        }
+
+        .description {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: var(--color-secondary-text);
+            max-width: 480px;
+            margin: 0 auto 2rem auto;
+        }
+
+        /* Orchard-inspired decorative elements */
+        .leaf-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 0.25rem;
+            color: var(--color-accent-light);
+            font-size: 1.2rem;
+        }
+
+        /* Action buttons matching theme */
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin: 2rem 0 2.5rem;
+        }
+
+        .btn-primary {
+            background-color: var(--color-accent);
+            color: white;
+            padding: 0.9rem 2rem;
+            border-radius: 50px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 10px rgba(31, 61, 43, 0.2);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        html[data-theme='dark'] .btn-primary {
+            background-color: var(--color-accent-light);
+            color: #000;
+            box-shadow: 0 4px 12px rgba(230, 179, 37, 0.25);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            filter: brightness(1.05);
+            box-shadow: 0 10px 20px rgba(31, 61, 43, 0.25);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--color-primary-text);
+            padding: 0.85rem 1.9rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            border: 1.5px solid var(--color-border);
+            transition: all 0.25s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--color-accent-light);
+            background-color: var(--color-hover);
+            color: var(--color-accent-light);
+            transform: translateY(-2px);
+        }
+
+        /* Suggested links row */
+        .helpful-links {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--color-border);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.8rem;
+        }
+
+        .helpful-links a {
+            color: var(--color-secondary-text);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .helpful-links a i {
+            font-size: 0.85rem;
+            color: var(--color-accent-light);
+        }
+
+        .helpful-links a:hover {
+            color: var(--color-accent-light);
+        }
+
+        /* floating orchard decoration */
+        .orchard-badge {
+            position: absolute;
+            bottom: 25px;
+            right: 25px;
+            font-size: 0.75rem;
+            background: var(--color-hover);
+            padding: 6px 14px;
+            border-radius: 40px;
+            color: var(--color-secondary-text);
+            backdrop-filter: blur(4px);
+            opacity: 0.7;
+            transition: opacity 0.2s;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .orchard-badge i {
+            color: var(--color-accent-light);
+            margin-right: 4px;
+        }
+
+        /* Theme toggle (small, subtle but functional) */
+        .theme-toggle-float {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            background: var(--color-background);
+            border: 1px solid var(--color-border);
+            border-radius: 60px;
+            padding: 10px 14px;
+            cursor: pointer;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            transition: all 0.2s;
+            backdrop-filter: blur(4px);
+            background-color: rgba(var(--color-background-rgb, 255,255,255), 0.85);
+        }
+        /* for better backdrop in dark mode */
+        html[data-theme='dark'] .theme-toggle-float {
+            background-color: rgba(13, 26, 18, 0.85);
+        }
+        .theme-toggle-float:hover {
+            border-color: var(--color-accent-light);
+        }
+        .theme-toggle-float svg {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+        }
+        .light-icon, .dark-icon {
+            color: var(--color-primary-text);
+        }
+        .hidden {
+            display: none;
+        }
+
+        /* Responsive touches */
+        @media (max-width: 550px) {
+            .error-code {
+                font-size: 7rem;
+            }
+            .title {
+                font-size: 1.5rem;
+            }
+            .btn-primary, .btn-secondary {
+                padding: 0.7rem 1.4rem;
+                font-size: 0.9rem;
+            }
+            .logo-text {
+                font-size: 2.3rem;
+            }
+            .theme-toggle-float {
+                top: 16px;
+                right: 16px;
+                padding: 6px 12px;
+            }
+        }
+
+        /* subtle sway for leaves (just for charm) */
+        .fa-leaf {
+            display: inline-block;
+            animation: softSway 4s infinite ease-in-out;
+        }
+        @keyframes softSway {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(3deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Minimal theme toggle (respects header-free experience) -->
+    <button id="theme-toggle-404" class="theme-toggle-float" aria-label="Switch dark/light mode">
+        <svg class="light-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+        </svg>
+        <svg class="dark-icon hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+        </svg>
+    </button>
+
+    <div class="error-container">
+        <!-- Exact Orchardix Logo (same as index.html header) -->
+        <a href="index.html" class="brand-logo" aria-label="Orchardix Home">
+            <div class="logo-text">
+                Orchard<span>ix</span>
+            </div>
+        </a>
+
+        <!-- 404 main art -->
+        <div class="error-code">404</div>
+        <h1 class="title">
+            <i class="fas fa-apple-alt leaf-icon"></i> 
+            Lost in the Orchard? 
+            <i class="fas fa-honey-pot leaf-icon"></i>
+        </h1>
+        <p class="description">
+            The page you're looking for seems to have wandered off into the ancient apple groves. 
+            Perhaps it's been bottled into a limited reserve. Let's guide you back to the tasting room.
+        </p>
+
+        <!-- Action Buttons -->
+        <div class="btn-group">
+            <a href="index.html" class="btn-primary">
+                <i class="fas fa-tree"></i> Return to Homepage
+            </a>
+            <a href="booking.html" class="btn-secondary">
+                <i class="fas fa-calendar-alt"></i> Book a Tasting
+            </a>
+        </div>
+
+        <!-- Helpful quick links (no header/footer, but essential navigation) -->
+        <div class="helpful-links">
+            <a href="services.html"><i class="fas fa-wine-bottle"></i> Our Ciders</a>
+            <a href="gallery.html"><i class="fas fa-camera"></i> Orchard Gallery</a>
+            <a href="contact.html"><i class="fas fa-envelope"></i> Contact Us</a>
+            <a href="about.html"><i class="fas fa-seedling"></i> Our Story</a>
+        </div>
+
+        <!-- Fun orchard quote -->
+        <div style="margin-top: 2.8rem; font-size: 0.85rem; color: var(--color-secondary-text); border-left: 2px solid var(--color-accent-light); padding-left: 1rem; max-width: 380px; margin-left: auto; margin-right: auto; text-align: left;">
+            <i class="fas fa-quote-left" style="color: var(--color-accent-light); margin-right: 6px;"></i>
+            Every sip tells a story — even lost pages find their way back to the orchard.
+        </div>
+    </div>
+
+    <div class="orchard-badge">
+        <i class="fas fa-leaf"></i> Since 1920 · Crafted with Nature
+    </div>
+
+    <script>
+        (function() {
+            const html = document.documentElement;
+            
+            // --- Load saved theme from localStorage (identical to original logic) ---
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            applyTheme(savedTheme);
+            
+            function applyTheme(theme) {
+                html.setAttribute('data-theme', theme);
+                const lightIcons = document.querySelectorAll('.light-icon');
+                const darkIcons = document.querySelectorAll('.dark-icon');
+                lightIcons.forEach(icon => icon.classList.toggle('hidden', theme === 'dark'));
+                darkIcons.forEach(icon => icon.classList.toggle('hidden', theme === 'light'));
+            }
+            
+            // Theme toggle button for 404 page
+            const themeBtn = document.getElementById('theme-toggle-404');
+            if (themeBtn) {
+                themeBtn.addEventListener('click', () => {
+                    const current = html.getAttribute('data-theme');
+                    const next = current === 'light' ? 'dark' : 'light';
+                    localStorage.setItem('theme', next);
+                    applyTheme(next);
+                });
+            }
+            
+            // Optional: sync if any language/direction is stored, but we don't need header/footer.
+            // But we ensure that if RTL direction is stored, we apply it (keeping body consistent)
+            const savedLang = localStorage.getItem('language');
+            if (savedLang === 'ar') {
+                document.documentElement.setAttribute('dir', 'rtl');
+                // minor adjustment for RTL support on floating badge
+                const badge = document.querySelector('.orchard-badge');
+                if (badge) {
+                    if (savedLang === 'ar') {
+                        badge.style.right = 'auto';
+                        badge.style.left = '25px';
+                    }
+                }
+                const toggleFloat = document.querySelector('.theme-toggle-float');
+                if (toggleFloat && savedLang === 'ar') {
+                    toggleFloat.style.right = 'auto';
+                    toggleFloat.style.left = '24px';
+                }
+            } else {
+                document.documentElement.setAttribute('dir', 'ltr');
+            }
+            
+            // optional: add a listener for language toggling if we want (to keep consistent with main site)
+            // but header/footer is omitted; if user clicks RTL icon elsewhere we keep consistent? but not needed.
+            // However we can still watch for storage changes if needed for cross-tab sync
+            window.addEventListener('storage', (e) => {
+                if (e.key === 'theme') {
+                    const newTheme = e.newValue || 'light';
+                    applyTheme(newTheme);
+                }
+                if (e.key === 'language') {
+                    const newLang = e.newValue || 'en';
+                    if (newLang === 'ar') {
+                        document.documentElement.setAttribute('dir', 'rtl');
+                        const badge = document.querySelector('.orchard-badge');
+                        if (badge) badge.style.right = 'auto'; badge.style.left = '25px';
+                        const toggleFloat = document.querySelector('.theme-toggle-float');
+                        if (toggleFloat) toggleFloat.style.right = 'auto'; toggleFloat.style.left = '24px';
+                    } else {
+                        document.documentElement.setAttribute('dir', 'ltr');
+                        const badge = document.querySelector('.orchard-badge');
+                        if (badge) badge.style.right = '25px'; badge.style.left = 'auto';
+                        const toggleFloat = document.querySelector('.theme-toggle-float');
+                        if (toggleFloat) toggleFloat.style.right = '24px'; toggleFloat.style.left = 'auto';
+                    }
+                }
+            });
+            
+            // tiny fix for background color variable for backdrop?
+            // we also set color background variable rgb for toggle? not necessary.
+            // additional: decorative animation smoothness
+        })();
+    </script>
+</body>
+</html>

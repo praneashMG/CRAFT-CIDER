@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/assets/fav.jpg" type="image/jpeg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <title>Booking | Orchardix Craft Cider & Meadery</title>
+
+<script src="tailwind.js"></script>    <style>
+        /* --- CSS Variables for Forest & Amber Palette --- */
+        :root, html[data-theme='light'] {
+            --color-background: #FFFFFF;
+            --color-primary-text: #000000;
+            --color-secondary-text: #4A4A4A;
+            --color-accent: #1F3D2B; /* Dark Forest Green */
+            --color-accent-light: #E6B325; /* Golden Amber */
+            --color-border: #E5E7EB; 
+            --color-hover: #F1F5F2; /* Soft Forest Tint */
+            --color-footer-bg: #1F3D2B; /* Dark Forest */
+            --color-footer-text: #EAEAEA; 
+        }
+        html[data-theme='dark'] {
+            --color-background: #0D1A12; /* Deep Forest Black */
+            --color-primary-text: #FFFFFF;
+            --color-secondary-text: #BDBDBD;
+            --color-accent: #2D5A3F; /* Lighter Forest */
+            --color-accent-light: #E6B325; 
+            --color-border: #1B2E23; 
+            --color-hover: #1B2E23;
+            --color-footer-bg: #000000;
+            --color-footer-text: #FFFFFF;
+        }
+        
+        body {
+            background-color: var(--color-background);
+            color: var(--color-primary-text);
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+            overflow-x: hidden;
+        }
+        
+        /* Utility Classes */
+        .text-primary-text { color: var(--color-primary-text); }
+        .text-secondary-text { color: var(--color-secondary-text); }
+        .text-accent { color: var(--color-accent); }
+        .text-accent-light { color: var(--color-accent-light); }
+        .bg-background { background-color: var(--color-background); }
+        .bg-hover { background-color: var(--color-hover); }
+        .border-border { border-color: var(--color-border); }
+
+        .bg-ocean-gradient { background: linear-gradient(135deg, #1F3D2B 0%, #2D5A3F 100%); }
+        .bg-coral-gradient { background: linear-gradient(135deg, #E6B325 0%, #F4D06F 100%); }
+
+        /* Footer & Nav Fixes */
+        #main-footer { background-color: var(--color-footer-bg); color: var(--color-footer-text); }
+        #main-footer .footer-heading { color: var(--color-accent-light) !important; }
+        #main-footer .footer-link:hover { color: var(--color-accent-light); padding-left: 4px; }
+
+        .nav-link { position: relative; transition: color 0.3s; padding-top: 0.25rem; padding-bottom: 0.25rem; }
+        .nav-link::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background-color: var(--color-accent-light); transform: scaleX(0); transition: transform 0.3s; }
+        .nav-link:hover::after, .nav-link.active::after { transform: scaleX(1); }
+        .nav-link.active, .nav-link:hover { color: var(--color-accent-light) !important; }
+
+        /* Dropdowns */
+        .dropdown-wrapper { position: relative; }
+        .dropdown-menu { position: absolute; top: calc(100% + 5px); left: 0; background-color: var(--color-background); border: 1px solid var(--color-border); border-radius: 0.5rem; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); min-width: 220px; z-index: 1000; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s ease; }
+        .dropdown-wrapper:hover .dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); display: block; }
+        .dropdown-menu a { display: block; padding: 0.75rem 1rem; color: var(--color-primary-text); text-decoration: none; font-size: 0.875rem; transition: all 0.2s ease; border-bottom: 1px solid var(--color-border); }
+        .dropdown-menu a:last-child { border-bottom: none; }
+        .dropdown-menu a:hover { background-color: var(--color-hover); color: var(--color-accent-light); padding-left: 1.25rem; }
+
+        .book-btn { background-color: var(--color-accent); color: white; transition: all 0.3s ease; }
+        html[data-theme='dark'] .book-btn { background-color: var(--color-accent-light); color: #000; }
+        .book-btn:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(31, 61, 43, 0.3); }
+
+        /* Modal specific animation */
+        @keyframes modalFade {
+            from { opacity: 0; transform: scale(0.95) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .animate-modal { animation: modalFade 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+        @media (max-width: 1024px) {
+            .dropdown-menu { position: static; display: none; opacity: 1; visibility: visible; transform: none; box-shadow: none; }
+            .dropdown-wrapper:hover .dropdown-menu { display: block; }
+        }
+
+        /* ===== DARK MODE OVERRIDES FOR HARDCODED COLORS ===== */
+        html[data-theme='dark'] .text-accent {
+            color: var(--color-accent-light) !important;
+        }
+        html[data-theme='dark'] .bg-white,
+        html[data-theme='dark'] section.bg-white,
+        html[data-theme='dark'] section.py-24.bg-white {
+            background-color: var(--color-background) !important;
+        }
+        html[data-theme='dark'] .bg-\[\#F1F5F2\],
+        html[data-theme='dark'] .bg-\[\#F9FAF9\],
+        html[data-theme='dark'] section.bg-\[\#F1F5F2\] {
+            background-color: var(--color-hover) !important;
+        }
+        html[data-theme='dark'] .text-\[\#1F3D2B\],
+        html[data-theme='dark'] h2.text-\[\#1F3D2B\],
+        html[data-theme='dark'] h3.text-\[\#1F3D2B\],
+        html[data-theme='dark'] h4.text-\[\#1F3D2B\],
+        html[data-theme='dark'] label.text-\[\#1F3D2B\] {
+            color: var(--color-primary-text) !important;
+        }
+        html[data-theme='dark'] .text-gray-600,
+        html[data-theme='dark'] .text-gray-500,
+        html[data-theme='dark'] .text-gray-400 {
+            color: var(--color-secondary-text) !important;
+        }
+        html[data-theme='dark'] .border-gray-100,
+        html[data-theme='dark'] .border-gray-200 {
+            border-color: var(--color-border) !important;
+        }
+        /* Form inputs */
+        html[data-theme='dark'] input,
+        html[data-theme='dark'] select,
+        html[data-theme='dark'] textarea {
+            background-color: var(--color-background) !important;
+            color: var(--color-primary-text) !important;
+            border-color: var(--color-border) !important;
+        }
+        html[data-theme='dark'] input::placeholder,
+        html[data-theme='dark'] textarea::placeholder {
+            color: var(--color-secondary-text) !important;
+        }
+        /* Package cards */
+        html[data-theme='dark'] .group.border.border-gray-100 {
+            background-color: var(--color-hover) !important;
+            border-color: var(--color-border) !important;
+        }
+        html[data-theme='dark'] .group.border-4.border-\[\#E6B325\] {
+            background-color: var(--color-hover) !important;
+        }
+        /* FAQ/details */
+        html[data-theme='dark'] details {
+            background-color: var(--color-hover) !important;
+            border-color: var(--color-border) !important;
+        }
+        html[data-theme='dark'] details summary {
+            color: var(--color-primary-text) !important;
+        }
+        html[data-theme='dark'] details p {
+            color: var(--color-secondary-text) !important;
+        }
+        /* Feature icons background */
+        html[data-theme='dark'] .bg-\[\#F1F5F2\].rounded-full {
+            background-color: var(--color-border) !important;
+        }
+        /* Booking form section background fix */
+        html[data-theme='dark'] .bg-white.rounded-3xl {
+            background-color: var(--color-hover) !important;
+        }
+        /* Submit button */
+        html[data-theme='dark'] button[type='submit'].bg-\[\#1F3D2B\],
+        html[data-theme='dark'] .bg-\[\#1F3D2B\].text-white {
+            background-color: var(--color-accent) !important;
+        }
+    </style>
+</head>
+<body class="antialiased flex flex-col min-h-screen">
+
+    <!-- HEADER -->
+    <header class="sticky top-0 z-50 transition-colors duration-300 shadow-xl border-b border-border bg-background" id="main-header">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between h-[70px]">
+            <a href="index.html" class="text-3xl font-serif font-extrabold tracking-tight text-accent-light">Orchardix</a>
+
+            <div class="hidden xl:flex items-center space-x-6">
+                <div class="flex space-x-6 rtl:space-x-reverse rtl:ml-6 text-primary-text font-medium">
+                    <div class="dropdown-wrapper">
+                        <button class="nav-link flex items-center font-semibold">
+                            Home <svg class="w-3 h-3 ml-1 relative top-[2.5px] transition-transform duration-200 text-primary-text" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="index.html">Home 1</a>
+                            <a href="home2.html">Home 2</a>
+                        </div>
+                    </div>
+                    <a href="booking.html" class="nav-link active">Book Now</a>
+                    <a href="services.html" class="nav-link">Services</a>
+                    <a href="gallery.html" class="nav-link">Gallery</a>
+                    <a href="about.html" class="nav-link">About</a>
+                    <a href="contact.html" class="nav-link">Contact</a>
+                    <div class="dropdown-wrapper">
+                        <button class="nav-link flex items-center text-primary-text">
+                            Dashboard <svg class="w-3 h-3 ml-1 relative top-[2.5px] transition-transform duration-200 text-primary-text" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="userdash.html">User Dashboard</a>
+                            <a href="dashboard.html">Admin Dashboard</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-px h-6 bg-border mx-3"></div>
+                <div class="flex items-center space-x-4 rtl:space-x-reverse rtl:mr-4">
+                    <button id="theme-toggle" class="icon-btn text-primary-text hover:text-accent-light p-1.5 rounded-full transition duration-200">
+                        <svg class="w-6 h-6 light-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                        <svg class="w-6 h-6 dark-icon hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                    </button>
+                    <button id="lang-icon" class="text-primary-text hover:text-accent-light p-1.5 rounded-full transition duration-200">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3a9 9 0 100 18 9 9 0 000-18zm0 0c2.5 2.8 2.5 12.2 0 15m0-15c-2.5 2.8-2.5 12.2 0 15M3 12h18" /></svg>
+                    </button>
+                    <div class="flex items-center gap-3 ml-3 flex-shrink-0">
+                        <a href="login.html" class="book-btn px-6 py-2.5 rounded-xl font-bold shadow-md transition-all duration-300 hover:scale-105">Login</a>
+                        <a href="signup.html" class="book-btn px-6 py-2.5 rounded-xl font-bold shadow-md transition-all duration-300 hover:scale-105">Sign Up</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="xl:hidden flex items-center space-x-4">
+                <button id="mobile-menu-open" class="icon-btn text-primary-text hover:text-accent-light p-1.5 rounded-full transition duration-200"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg></button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="flex-grow">
+        <!-- 1️⃣ HERO SECTION -->
+        <section class="relative min-h-[60vh] flex items-center justify-center overflow-hidden">
+            <div class="absolute inset-0 z-0">
+                <img src="/assets/all hero.webp" 
+                     alt="Orchardix Tasting Room" 
+                     class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-black/65"></div>
+            </div>
+            <div class="container mx-auto max-w-7xl px-4 relative z-10 text-center">
+                <div class="animate-fadeInUp">
+                    <h1 class="font-serif text-4xl md:text-6xl font-bold text-white leading-tight mb-6">
+                        Book Your <span class="text-[#E6B325]">Orchardix Experience</span>
+                    </h1>
+                    <p class="font-sans text-lg md:text-xl text-gray-200 max-w-2xl mx-auto leading-relaxed font-light">
+                        Join us for an unforgettable journey through our heritage orchards and craft cellars. Reserve your place at our table today.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2️⃣ BOOKING CATEGORIES -->
+        <section class="py-24 bg-white">
+            <div class="container mx-auto max-w-7xl px-4">
+                <div class="text-center mb-16">
+                    <h2 class="font-serif text-3xl md:text-4xl font-bold text-[#1F3D2B] mb-4">Select Your Experience</h2>
+                    <div class="w-20 h-1 bg-[#E6B325] mx-auto"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Package 1 -->
+                    <div class="group border border-gray-100 p-10 rounded-2xl bg-[#F9FAF9] hover:bg-white hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-t-4 hover:border-t-[#E6B325]">
+                        <h3 class="font-serif text-2xl font-bold text-[#1F3D2B] mb-2">Tasting Flight</h3>
+                        <div class="flex items-baseline mb-4">
+                            <span class="text-3xl font-bold text-[#E6B325]">$25</span>
+                            <span class="text-gray-400 text-sm ml-2">/ person</span>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-6">A curated selection of 5 signature ciders and meads in our main taproom.</p>
+                        <ul class="space-y-3 mb-8 text-sm text-gray-600">
+                            <li class="flex items-center"><i class="fas fa-check text-[#E6B325] mr-2"></i> 45 Minute Duration</li>
+                            <li class="flex items-center"><i class="fas fa-check text-[#E6B325] mr-2"></i> Guided Tasting Notes</li>
+                            <li class="flex items-center"><i class="fas fa-check text-[#E6B325] mr-2"></i> Palate Cleansers Included</li>
+                        </ul>
+                        <button onclick="openBookingModal('flight')" class="block w-full text-center py-3 border-2 border-[#1F3D2B] text-[#1F3D2B] rounded-xl font-bold group-hover:bg-[#1F3D2B] group-hover:text-white transition-all">Select Package</button>
+                    </div>
+
+                    <!-- Package 2: HIGHLIGHTED -->
+                    <div class="group border-4 border-[#E6B325] p-10 rounded-2xl bg-white shadow-xl transform scale-105 relative z-10">
+                        <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#E6B325] text-[#1F3D2B] px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest">Most Popular</div>
+                        <h3 class="font-serif text-2xl font-bold text-[#1F3D2B] mb-2">Orchard Tour & Tasting</h3>
+                        <div class="flex items-baseline mb-4">
+                            <span class="text-3xl font-bold text-[#E6B325]">$45</span>
+                            <span class="text-gray-400 text-sm ml-2">/ person</span>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-6">Go behind the scenes with a walk through the trees followed by a full tasting.</p>
+                        <ul class="space-y-3 mb-8 text-sm text-gray-600">
+                            <li class="flex items-center"><i class="fas fa-check text-[#E6B325] mr-2"></i> 90 Minute Duration</li>
+                            <li class="flex items-center"><i class="fas fa-check text-[#E6B325] mr-2"></i> Guided Orchard Walk</li>
+                            <li class="flex items-center"><i class="fas fa-check text-[#E6B325] mr-2"></i> Artisanal Cheese Pairing</li>
+                        </ul>
+                        <button onclick="openBookingModal('tour')" class="block w-full text-center py-3 bg-[#1F3D2B] text-white rounded-xl font-bold hover:bg-[#2D5A3F] transition-all">Select Package</button>
+                    </div>
+
+                    <!-- Package 3 -->
+                    <div class="group border border-gray-100 p-10 rounded-2xl bg-[#F9FAF9] hover:bg-white hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-t-4 hover:border-t-[#E6B325]">
+                        <h3 class="font-serif text-2xl font-bold text-[#1F3D2B] mb-2">Private Cellar VIP</h3>
+                        <div class="flex items-baseline mb-4">
+                            <span class="text-3xl font-bold text-[#E6B325]">$85</span>
+                            <span class="text-gray-400 text-sm ml-2">/ person</span>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-6">An exclusive evening in our private cellar featuring library reserves and pairings.</p>
+                        <ul class="space-y-3 mb-8 text-sm text-gray-600">
+                            <li class="flex items-center"><i class="fas fa-check text-[#E6B325] mr-2"></i> 2 Hour Duration</li>
+                            <li class="flex items-center"><i class="fas fa-check text-[#E6B325] mr-2"></i> Rare Library Releases</li>
+                            <li class="flex items-center"><i class="fas fa-check text-[#E6B325] mr-2"></i> Full Charcuterie Board</li>
+                        </ul>
+                        <button onclick="openBookingModal('reserve')" class="block w-full text-center py-3 border-2 border-[#1F3D2B] text-[#1F3D2B] rounded-xl font-bold group-hover:bg-[#1F3D2B] group-hover:text-white transition-all">Select Package</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+<!-- 3️⃣ REDESIGNED BOOKING FORM SECTION -->
+<section id="booking-form" class="py-24 bg-[#F1F5F2] transition-colors duration-300">
+    <div class="container mx-auto max-w-7xl px-4">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-0 bg-white rounded-[2rem] shadow-[0_20px_50px_rgba(31,61,43,0.1)] overflow-hidden">
+            
+            <!-- Left Side: Visual & Context (5 Columns) -->
+            <div class="lg:col-span-5 relative min-h-[400px] lg:min-h-full">
+                <img src="https://avatars.mds.yandex.net/i?id=79653ac41f47482a16a99bf7cc03559dbca82ddd-5232506-images-thumbs&n=13" 
+                     alt="Cellar Atmosphere" 
+                     class="absolute inset-0 w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-br from-[#1F3D2B]/40 via-[#1F3D2B]/70 to-transparent"></div>
+                
+                <div class="relative h-full flex flex-col justify-between p-10 md:p-16 text-white">
+                    <div>
+                        <span class="inline-block px-4 py-1.5 rounded-full bg-[#E6B325]/20 border border-[#E6B325]/30 text-[#E6B325] text-[10px] font-bold uppercase tracking-widest mb-6">
+                            Reservations
+                        </span>
+                        <h2 class="font-serif text-4xl md:text-5xl font-bold leading-tight mb-6">
+                            Secure Your <br><span class="text-[#E6B325]">Place at the Table</span>
+                        </h2>
+                        <p class="text-white/80 text-lg font-light leading-relaxed max-w-sm">
+                            Experience the harvest of the season. Our cellar is a sanctuary for those who appreciate the slow art of fermentation.
+                        </p>
+                    </div>
+
+                    <div class="space-y-6 mt-12">
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0 text-[#E6B325]">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-sm">Flexible Hours</h4>
+                                <p class="font-bold text-xs">Mon-Sun: 11:00 AM — 7:00 PM</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0 text-[#E6B325]">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-sm">Main Tasting Room</h4>
+                                <p class="font-bold text-xs">Orchardix Estate, Hill Road 42</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side: The Form (7 Columns) -->
+            <div class="lg:col-span-7 p-8 md:p-16 lg:p-20 bg-white">
+                <form class="space-y-8">
+                    <!-- Form Header -->
+                    <div class="mb-10">
+                        <h3 class="font-serif text-2xl font-bold text-[#1F3D2B] mb-2">Reservation Details</h3>
+                        <div class="w-12 h-1 bg-[#E6B325]"></div>
+                    </div>
+
+                    <!-- Selection Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="space-y-2">
+                            <label class="block text-[10px] font-bold text-[#1F3D2B] uppercase tracking-widest ml-1">The Experience</label>
+                            <div class="relative group">
+                                <i class="fas fa-glass-cheers absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#E6B325] transition-colors"></i>
+                                <select class="w-full pl-12 pr-5 py-4 rounded-2xl border border-gray-100 bg-gray-50/50 outline-none focus:bg-white focus:ring-2 focus:ring-[#E6B325]/20 focus:border-[#E6B325] transition-all appearance-none cursor-pointer">
+                                    <option>Tasting Flight</option>
+                                    <option selected>Orchard Tour & Tasting</option>
+                                    <option>Private Cellar VIP</option>
+                                </select>
+                                <i class="fas fa-chevron-down absolute right-5 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none text-xs"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-2">
+                            <label class="block text-[10px] font-bold text-[#1F3D2B] uppercase tracking-widest ml-1">Guest Count</label>
+                            <div class="relative group">
+                                <i class="fas fa-users absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#E6B325] transition-colors"></i>
+                                <input type="number" min="1" max="12" value="2" 
+                                       class="w-full pl-12 pr-5 py-4 rounded-2xl border border-gray-100 bg-gray-50/50 outline-none focus:bg-white focus:ring-2 focus:ring-[#E6B325]/20 focus:border-[#E6B325] transition-all">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Date & Time Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="space-y-2">
+                            <label class="block text-[10px] font-bold text-[#1F3D2B] uppercase tracking-widest ml-1">Select Date</label>
+                            <div class="relative group">
+                                <i class="fas fa-calendar-alt absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#E6B325] transition-colors"></i>
+                                <input type="date" 
+                                       class="w-full pl-12 pr-5 py-4 rounded-2xl border border-gray-100 bg-gray-50/50 outline-none focus:bg-white focus:ring-2 focus:ring-[#E6B325]/20 focus:border-[#E6B325] transition-all">
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-2">
+                            <label class="block text-[10px] font-bold text-[#1F3D2B] uppercase tracking-widest ml-1">Preferred Time</label>
+                            <div class="relative group">
+                                <i class="fas fa-clock absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#E6B325] transition-colors"></i>
+                                <select class="w-full pl-12 pr-5 py-4 rounded-2xl border border-gray-100 bg-gray-50/50 outline-none focus:bg-white focus:ring-2 focus:ring-[#E6B325]/20 focus:border-[#E6B325] transition-all appearance-none cursor-pointer">
+                                    <option>11:00 AM</option>
+                                    <option>1:00 PM</option>
+                                    <option>3:00 PM</option>
+                                    <option>5:00 PM</option>
+                                </select>
+                                <i class="fas fa-chevron-down absolute right-5 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none text-xs"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Info -->
+                    <div class="pt-8 border-t border-gray-100 space-y-8">
+                        <div class="space-y-2">
+                            <label class="block text-[10px] font-bold text-[#1F3D2B] uppercase tracking-widest ml-1">Personal Info</label>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <input type="text" placeholder="Full Name" 
+                                       class="w-full px-6 py-4 rounded-2xl border border-gray-100 bg-gray-50/50 outline-none focus:bg-white focus:ring-2 focus:ring-[#E6B325]/20 focus:border-[#E6B325] transition-all">
+                                <input type="email" placeholder="Email Address" 
+                                       class="w-full px-6 py-4 rounded-2xl border border-gray-100 bg-gray-50/50 outline-none focus:bg-white focus:ring-2 focus:ring-[#E6B325]/20 focus:border-[#E6B325] transition-all">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="pt-4">
+                        <button type="submit" 
+                                class="group relative w-full overflow-hidden rounded-2xl bg-[#1F3D2B] py-5 px-8 text-white font-bold text-lg shadow-xl transition-all hover:bg-[#2D5A3F] hover:-translate-y-1 active:scale-[0.98]">
+                            <span class="relative z-10 flex items-center justify-center gap-3">
+                                Request Reservation 
+                                <i class="fas fa-arrow-right text-sm group-hover:translate-x-2 transition-transform"></i>
+                            </span>
+                        </button>
+                        <p class="text-center text-[10px] text-gray-400 mt-6 uppercase tracking-widest">
+                            No immediate payment required • Instant confirmation email
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+        <!-- 4️⃣ WHY BOOK WITH US? (FEATURES) -->
+        <section class="py-24 bg-white">
+            <div class="container mx-auto max-w-7xl px-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 text-center">
+                    <div>
+                        <div class="w-16 h-16 bg-[#F1F5F2] rounded-full flex items-center justify-center text-[#1F3D2B] mx-auto mb-6"><i class="fas fa-user-tie text-2xl"></i></div>
+                        <h3 class="font-serif text-xl font-bold text-[#1F3D2B] mb-2">Expert-Led</h3>
+                        <p class="text-gray-500 text-sm">Guided by certified cider masters and honey sommeliers.</p>
+                    </div>
+                    <div>
+                        <div class="w-16 h-16 bg-[#F1F5F2] rounded-full flex items-center justify-center text-[#1F3D2B] mx-auto mb-6"><i class="fas fa-star text-2xl"></i></div>
+                        <h3 class="font-serif text-xl font-bold text-[#1F3D2B] mb-2">Exclusive Tastes</h3>
+                        <p class="text-gray-500 text-sm">Sample limited batches only available at our taproom.</p>
+                    </div>
+                    <div>
+                        <div class="w-16 h-16 bg-[#F1F5F2] rounded-full flex items-center justify-center text-[#1F3D2B] mx-auto mb-6"><i class="fas fa-mountain text-2xl"></i></div>
+                        <h3 class="font-serif text-xl font-bold text-[#1F3D2B] mb-2">Scenic Views</h3>
+                        <p class="text-gray-500 text-sm">Enjoy the serene beauty of our 100-acre heritage orchard.</p>
+                    </div>
+                    <div>
+                        <div class="w-16 h-16 bg-[#F1F5F2] rounded-full flex items-center justify-center text-[#1F3D2B] mx-auto mb-6"><i class="fas fa-cheese text-2xl"></i></div>
+                        <h3 class="font-serif text-xl font-bold text-[#1F3D2B] mb-2">Gourmet Pairings</h3>
+                        <p class="text-gray-500 text-sm">Locally sourced cheeses and charcuterie with every flight.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+       <!-- 5️⃣ REDESIGNED FAQ SECTION -->
+<section class="py-24 bg-[#F9FAF9] transition-colors duration-300">
+    <div class="container mx-auto max-w-7xl px-4">
+        <!-- Header -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+            <div class="max-w-2xl">
+                <span class="inline-block px-4 py-1.5 rounded-full bg-[#1F3D2B]/5 border border-[#1F3D2B]/10 text-[#1F3D2B] text-[10px] font-bold uppercase tracking-widest mb-4">
+                    Assistance
+                </span>
+                <h2 class="font-serif text-4xl md:text-5xl font-bold text-[#1F3D2B]">
+                    Commonly Asked <span class="text-[#E6B325]">Questions</span>
+                </h2>
+            </div>
+            <p class="text-gray-500 text-lg max-w-xs border-l-2 border-[#E6B325] pl-6 italic">
+                Everything you need to know before visiting the Orchardix Estate.
+            </p>
+        </div>
+
+        <!-- FAQ Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+            
+            <!-- Question 1 -->
+            <details class="group bg-white rounded-3xl border border-gray-100 shadow-[0_4px_20px_rgba(31,61,43,0.03)] cursor-pointer transition-all duration-300 open:shadow-xl open:border-[#E6B325]/30">
+                <summary class="flex justify-between items-center p-8 list-none [&::-webkit-details-marker]:hidden">
+                    <span class="font-serif text-xl font-bold text-[#1F3D2B] pr-4">What is your cancellation policy?</span>
+                    <div class="flex-shrink-0 w-8 h-8 rounded-full border border-gray-100 flex items-center justify-center transition-all duration-300 group-open:bg-[#E6B325] group-open:border-[#E6B325]">
+                        <i class="fas fa-plus text-[10px] text-[#E6B325] transition-transform duration-300 group-open:rotate-45 group-open:text-white"></i>
+                    </div>
+                </summary>
+                <div class="px-8 pb-8">
+                    <div class="h-px w-full bg-gray-50 mb-6"></div>
+                    <p class="text-gray-500 leading-relaxed">
+                        We offer full refunds for cancellations made at least <span class="text-[#1F3D2B] font-bold">48 hours</span> prior to your booking. This allows us to offer the slot to other guests. Cancellations within the 48-hour window will incur a 50% service fee.
+                    </p>
+                </div>
+            </details>
+
+            <!-- Question 2 -->
+            <details class="group bg-white rounded-3xl border border-gray-100 shadow-[0_4px_20px_rgba(31,61,43,0.03)] cursor-pointer transition-all duration-300 open:shadow-xl open:border-[#E6B325]/30">
+                <summary class="flex justify-between items-center p-8 list-none [&::-webkit-details-marker]:hidden">
+                    <span class="font-serif text-xl font-bold text-[#1F3D2B] pr-4">Are children and pets allowed?</span>
+                    <div class="flex-shrink-0 w-8 h-8 rounded-full border border-gray-100 flex items-center justify-center transition-all duration-300 group-open:bg-[#E6B325] group-open:border-[#E6B325]">
+                        <i class="fas fa-plus text-[10px] text-[#E6B325] transition-transform duration-300 group-open:rotate-45 group-open:text-white"></i>
+                    </div>
+                </summary>
+                <div class="px-8 pb-8">
+                    <div class="h-px w-full bg-gray-50 mb-6"></div>
+                    <p class="text-gray-500 leading-relaxed">
+                        Orchardix is a family-friendly estate. Children are welcome but must be supervised at all times near the fermentation areas. Well-behaved pets are permitted specifically in our <span class="text-[#1F3D2B] font-bold">outdoor orchard patio</span> areas.
+                    </p>
+                </div>
+            </details>
+
+            <!-- Question 3 -->
+            <details class="group bg-white rounded-3xl border border-gray-100 shadow-[0_4px_20px_rgba(31,61,43,0.03)] cursor-pointer transition-all duration-300 open:shadow-xl open:border-[#E6B325]/30">
+                <summary class="flex justify-between items-center p-8 list-none [&::-webkit-details-marker]:hidden">
+                    <span class="font-serif text-xl font-bold text-[#1F3D2B] pr-4">Do you offer dietary pairings?</span>
+                    <div class="flex-shrink-0 w-8 h-8 rounded-full border border-gray-100 flex items-center justify-center transition-all duration-300 group-open:bg-[#E6B325] group-open:border-[#E6B325]">
+                        <i class="fas fa-plus text-[10px] text-[#E6B325] transition-transform duration-300 group-open:rotate-45 group-open:text-white"></i>
+                    </div>
+                </summary>
+                <div class="px-8 pb-8">
+                    <div class="h-px w-full bg-gray-50 mb-6"></div>
+                    <p class="text-gray-500 leading-relaxed">
+                        Yes! We pride ourselves on inclusivity. We provide <span class="text-[#1F3D2B] font-bold">vegan and gluten-free</span> artisanal cheese and charcuterie pairings upon request. Please note any specific allergies in the "Special Requests" field when booking.
+                    </p>
+                </div>
+            </details>
+
+            <!-- Question 4 -->
+            <details class="group bg-white rounded-3xl border border-gray-100 shadow-[0_4px_20px_rgba(31,61,43,0.03)] cursor-pointer transition-all duration-300 open:shadow-xl open:border-[#E6B325]/30">
+                <summary class="flex justify-between items-center p-8 list-none [&::-webkit-details-marker]:hidden">
+                    <span class="font-serif text-xl font-bold text-[#1F3D2B] pr-4">What about inclement weather?</span>
+                    <div class="flex-shrink-0 w-8 h-8 rounded-full border border-gray-100 flex items-center justify-center transition-all duration-300 group-open:bg-[#E6B325] group-open:border-[#E6B325]">
+                        <i class="fas fa-plus text-[10px] text-[#E6B325] transition-transform duration-300 group-open:rotate-45 group-open:text-white"></i>
+                    </div>
+                </summary>
+                <div class="px-8 pb-8">
+                    <div class="h-px w-full bg-gray-50 mb-6"></div>
+                    <p class="text-gray-500 leading-relaxed">
+                        Rain won't dampen the experience. In the event of heavy rain, orchard tours are seamlessly transitioned to our <span class="text-[#1F3D2B] font-bold">sheltered barrel aging facility</span>, where you can experience the cellar's unique micro-climate while staying dry.
+                    </p>
+                </div>
+            </details>
+
+        </div>
+
+        <!-- Support Footer -->
+        <div class="mt-16 text-center">
+            <p class="text-gray-400 text-sm">
+                Still have questions? <a href="contact.html" class="text-[#1F3D2B] font-bold border-b border-[#E6B325] hover:text-[#E6B325] transition-colors">Chat with our Concierge Team</a>
+            </p>
+        </div>
+    </div>
+</section>
+
+        <!-- 6️⃣ CALL TO ACTION -->
+        <section class="py-24 bg-white">
+            <div class="container mx-auto max-w-7xl px-4">
+                <div class="bg-gradient-to-r from-[#1F3D2B] via-[#2D5A3F] to-[#E6B325] p-16 md:p-24 rounded-[3rem] text-center shadow-3xl relative overflow-hidden">
+                    <div class="relative z-10">
+                        <h2 class="font-serif text-3xl md:text-5xl font-bold text-white mb-6">Can't Find a Suitable Time?</h2>
+                        <p class="text-white/80 text-lg max-w-2xl mx-auto mb-10 font-light">For groups larger than 12 or for private events and weddings, please reach out to our events team directly.</p>
+                        <a href="contact.html" class="inline-block px-10 py-5 bg-white text-[#1F3D2B] rounded-full font-bold text-lg hover:bg-[#E6B325] hover:text-[#1F3D2B] transition-all duration-300 transform hover:scale-105 shadow-2xl">Contact Events Team</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- MODAL SYSTEM -->
+    <div id="booking-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeBookingModal()"></div>
+        <div class="relative w-full max-w-4xl bg-background rounded-3xl md:rounded-[3rem] shadow-3xl z-10 animate-modal overflow-y-auto overflow-x-hidden max-h-[90vh]">
+            <button onclick="closeBookingModal()" class="absolute top-4 right-4 md:top-6 md:right-8 text-white md:text-secondary-text hover:text-accent-light transition text-2xl z-20 bg-black/20 md:bg-transparent backdrop-blur-sm md:backdrop-blur-none rounded-full w-8 h-8 md:w-auto md:h-auto flex items-center justify-center"><i class="fas fa-times"></i></button>
+
+            <div class="flex flex-col md:flex-row h-full">
+                <div class="w-full md:w-2/5 relative h-56 md:h-auto flex-shrink-0">
+                    <img id="modal-img" src="" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#1F3D2B]/90 via-transparent to-transparent"></div>
+                    <div class="absolute bottom-6 left-6 md:bottom-10 md:left-8 md:right-8">
+                        <h2 id="modal-title" class="font-serif text-3xl md:text-4xl font-bold text-white mb-2"></h2>
+<span class="px-3 py-1 md:px-4 bg-accent-light text-white rounded-full text-[9px] md:text-[10px] font-bold uppercase tracking-[0.2em]">
+  Heritage Tier
+</span>                     </div>
+                </div>
+
+                <div class="w-full md:w-3/5 p-6 sm:p-8 md:p-12 space-y-6 md:space-y-8 flex-1">
+                    <div>
+                        <h4 class="font-serif text-xl md:text-2xl font-bold text-accent mb-3 md:mb-4 border-b border-border pb-2">Experience Overview</h4>
+                        <p id="modal-desc" class="text-secondary-text text-sm md:text-base leading-relaxed mb-6 md:mb-8"></p>
+                        <div class="grid grid-cols-2 gap-3 md:gap-4">
+                            <div class="p-3 md:p-4 bg-hover rounded-2xl text-center">
+                                <span class="text-[9px] md:text-[10px] uppercase font-bold text-secondary-text tracking-widest block mb-1">Standard Price</span>
+                                <span id="modal-base-price" class="text-xl md:text-2xl font-bold text-accent"></span>
+                            </div>
+                            <div class="p-3 md:p-4 bg-green-50 rounded-2xl text-center border border-green-100">
+                                <span class="text-[9px] md:text-[10px] uppercase font-bold text-green-700 tracking-widest block mb-1">Member Price (-15%)</span>
+                                <span id="modal-discount" class="text-xl md:text-2xl font-bold text-green-600"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-5 md:p-6 bg-accent rounded-3xl border border-accent-light/30 relative overflow-hidden shadow-lg">
+                        <div class="absolute top-0 right-0 w-24 h-24 bg-accent-light/10 blur-2xl rounded-full -mr-12 -mt-12"></div>
+                        <h5 class="text-accent-light font-bold flex items-center gap-2 md:gap-3 mb-2 uppercase tracking-widest text-[10px] md:text-xs"><i class="fas fa-crown"></i> Yearly Heritage Savings</h5>
+                        <p class="text-[10px] md:text-xs text-accent-light leading-relaxed italic">Become a Member to lock in seasonal harvest dates and save <span id="modal-yearly" class="text-accent-light font-bold text-sm md:text-base not-italic"></span> annually.</p>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-3 md:gap-4 pt-2 md:pt-4">
+                        <button onclick="closeBookingModal()" class="flex-grow py-4 md:py-5 bg-accent-light text-black rounded-2xl font-bold text-center hover:opacity-90 transition transform hover:scale-[1.02] shadow-xl text-sm md:text-base">Finalize Booking</button>
+                        <button onclick="closeBookingModal()" class="px-6 md:px-8 py-4 md:py-5 border-2 border-border text-secondary-text rounded-2xl font-bold hover:bg-hover transition text-sm md:text-base">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MOBILE DRAWER -->
+    <div id="mobile-menu-drawer" class="fixed inset-0 z-50 pointer-events-none transition-all duration-300">
+        <div id="drawer-backdrop" class="absolute inset-0 bg-black opacity-0 transition-opacity duration-300 pointer-events-none"></div>
+        <div id="drawer-content" class="absolute top-0 left-0 right-0 bg-background rounded-b-2xl shadow-2xl p-6 xl:hidden max-h-[85vh] overflow-y-auto transform translate-y-[-100%] transition-transform duration-300 ease-out">
+            <div class="flex justify-between items-center pb-4 border-b border-border">
+                <a href="index.html" class="text-3xl font-serif font-extrabold tracking-tight text-accent-light">Orchardix</a>
+                <button id="mobile-menu-close" class="text-primary-text hover:text-accent-light p-1.5 rounded-full transition duration-200"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+            </div>
+            <nav class="flex flex-col space-y-2 py-4">
+                <div>
+                    <button class="block text-primary-text font-bold text-lg py-2 w-full text-left flex justify-between items-center" id="mobile-homes-toggle">Home <svg class="w-4 h-4 transform transition-transform duration-200 text-primary-text" id="homes-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></button>
+                    <div id="mobile-homes-menu" class="hidden pl-4 flex flex-col space-y-1 mt-1 border-l-2 border-border"><a href="index.html" class="block text-secondary-text hover:text-accent-light py-1 px-2">Home 1</a><a href="home2.html" class="block text-secondary-text hover:text-accent-light py-1 px-2">Home 2</a></div>
+                </div>
+                <a href="booking.html" class="block text-accent-light font-semibold text-lg py-2">Book now</a>
+                <a href="services.html" class="block text-primary-text font-semibold text-lg py-2">Services</a>
+                <a href="gallery.html" class="block text-primary-text font-semibold text-lg py-2">Gallery</a>
+                <a href="about.html" class="block text-primary-text font-semibold text-lg py-2">About</a>
+                <a href="contact.html" class="block text-primary-text font-semibold text-lg py-2">Contact</a>
+                <div>
+                    <button class="block text-primary-text font-semibold text-lg py-2 w-full text-left flex justify-between items-center" id="mobile-dashboard-toggle">Dashboard <svg class="w-4 h-4 transform transition-transform duration-200 text-primary-text" id="dashboard-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></button>
+                    <div id="mobile-dashboard-menu" class="hidden pl-4 flex flex-col space-y-1 mt-1 border-l-2 border-border"><a href="userdash.html" class="block text-secondary-text hover:text-accent-light py-1 px-2">User Dashboard</a><a href="dashboard.html" class="block text-secondary-text hover:text-accent-light py-1 px-2">Admin Dashboard</a></div>
+                </div>
+            </nav>
+            <div class="pt-4 border-t border-border mt-4 flex justify-around items-center">
+                <button id="mobile-lang-icon-drawer" class="icon-btn flex flex-col items-center text-primary-text hover:text-accent-light p-2 transition duration-200"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3a9 9 0 100 18 9 9 0 000-18zm0 0c2.5 2.8 2.5 12.2 0 15m0-15c-2.5 2.8-2.5 12.2 0 15M3 12h18" /></svg><span class="text-xs mt-1 text-secondary-text">RTL</span></button>
+                <button id="drawer-theme-toggle" class="icon-btn flex flex-col items-center text-primary-text hover:text-accent-light p-2 transition duration-200"><svg class="w-6 h-6 light-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg><svg class="w-6 h-6 dark-icon hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg><span class="text-xs mt-1 text-secondary-text">Theme</span></button>
+            </div>
+            <div class="flex mt-5 gap-5 w-full px-2">
+                <a href="login.html" class="flex-1 book-btn text-center py-2 rounded-xl font-bold text-sm shadow-md">Login</a>
+                <a href="signup.html" class="flex-1 book-btn text-center py-2 rounded-xl font-bold text-sm shadow-md">Sign Up</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer id="main-footer" class="pt-20 transition-colors duration-300">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-12 pb-16 border-b border-gray-800">
+                <div class="lg:col-span-2">
+                    <h1 class="text-3xl font-serif font-extrabold tracking-tight text-accent-light">Orchardix</h1>
+                    <p class="text-lg leading-relaxed max-w-sm !text-gray-300">Crafted cider and honey mead from the finest orchard harvests timeless taste crafted for unforgettable moments.</p>
+                    <div class="flex space-x-6 mt-10"><a href="#" class="text-white hover:text-accent-light transition text-xl"><i class="fab fa-facebook-f"></i></a><a href="#" class="text-white hover:text-accent-light transition text-xl"><i class="fab fa-instagram"></i></a><a href="#" class="text-white hover:text-accent-light transition text-xl"><i class="fab fa-whatsapp"></i></a></div>
+                </div>
+                <div><h4 class="footer-heading font-bold text-xl mb-6">Our Brews</h4><ul class="space-y-4"><li><a href="#" class="footer-link">Craft Apple Cider</a></li><li><a href="#" class="footer-link">Traditional Honey Mead</a></li><li><a href="#" class="footer-link">Seasonal Special Blends</a></li><li><a href="#" class="footer-link">Limited Reserve Collection</a></li></ul></div>
+                <div><h4 class="footer-heading font-bold text-xl mb-6">Quick Links</h4><ul class="space-y-4"><li><a href="booking.html" class="footer-link">Book Now</a></li><li><a href="services.html" class="footer-link">Services</a></li><li><a href="gallery.html" class="footer-link">Gallery</a></li><li><a href="contact.html" class="footer-link">Contact</a></li></ul></div>
+                <div><h4 class="footer-heading font-bold text-xl mb-6">Newsletter</h4><p class="text-sm mb-6 !text-gray-300">Subscribe for cider releases, mead tastings, and exclusive offers.</p>
+                    <div class="flex flex-col space-y-4"><input type="email" placeholder="Your email address" class="p-4 text-sm rounded-xl bg-gray-900 border border-gray-800 focus:ring-1 focus:ring-accent-light focus:outline-none text-white" /><button class="bg-coral-gradient text-black font-bold py-3 rounded-xl transition hover:opacity-90">Subscribe</button></div>
+                </div>
+            </div>
+            <div class="py-10 text-center text-gray-500 text-sm">© 2026 Orchardix. All rights reserved.</div>
+        </div>
+    </footer>
+
+    <script>
+        const packageDetails = {
+            flight: {
+                title: "Tasting Flight",
+                desc: "An entry-level sensory journey through our core flagship collection. Includes five distinct pours ranging from crisp heritage ciders to smooth wildflower meads. Perfect for those new to artisanal fermentation.",
+                price: "$25.00",
+                discount: "$21.25",
+                yearly: "$120.00",
+                img: "https://bulwarkcider.com/wp-content/uploads/2023/01/Blush-triple-berry-355ml-can-3D-rendition-straight-angle-new-Nov-17-no-background-PNG-577x1024.png"
+            },
+            tour: {
+                title: "Orchard & Cellar",
+                desc: "A fully immersive heritage tour. Begin with a guided walk through our centennial trees, witness the technical artistry of our brewing facility, and conclude with a full flight paired with a gourmet charcuterie board.",
+                price: "$45.00",
+                discount: "$38.25",
+                yearly: "$240.00",
+                img: "https://i.pinimg.com/736x/9b/10/c1/9b10c1a766bae52b5764f465afd040c1.jpg"
+            },
+            reserve: {
+                title: "Private Library",
+                desc: "The ultimate connoisseur experience. Gain exclusive access to our underground stone library for rare, aged reserves not available to the public. Includes a personal session with our Cellar Master and artisanal pairings.",
+                price: "$85.00",
+                discount: "$72.25",
+                yearly: "$500.00",
+                img: "https://www.wowbooze.com/wp-content/uploads/2024/05/aae6a93f-c2c8-4c21-b912-f1ae2ba6a2a5-e1715855049280-768x717.jpg"
+            }
+        };
+
+        function openBookingModal(pkg) {
+            const data = packageDetails[pkg];
+            document.getElementById('modal-title').innerText = data.title;
+            document.getElementById('modal-desc').innerText = data.desc;
+            document.getElementById('modal-base-price').innerText = data.price;
+            document.getElementById('modal-discount').innerText = data.discount;
+            document.getElementById('modal-yearly').innerText = data.yearly;
+            document.getElementById('modal-img').src = data.img;
+            
+            document.getElementById('booking-modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeBookingModal() {
+            document.getElementById('booking-modal').classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const html = document.documentElement;
+
+            // Theme logic
+            const applyTheme = (t) => {
+                html.setAttribute('data-theme', t);
+                document.querySelectorAll('.light-icon').forEach(i => i.classList.toggle('hidden', t === 'dark'));
+                document.querySelectorAll('.dark-icon').forEach(i => i.classList.toggle('hidden', t === 'light'));
+            };
+            const themeToggles = [document.getElementById('theme-toggle'), document.getElementById('drawer-theme-toggle')];
+            themeToggles.forEach(btn => btn?.addEventListener('click', () => {
+                const next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+                localStorage.setItem('theme', next);
+                applyTheme(next);
+            }));
+            applyTheme(localStorage.getItem('theme') || 'light');
+
+            // Mobile Menu
+            const openBtn = document.getElementById('mobile-menu-open');
+            const closeBtn = document.getElementById('mobile-menu-close');
+            const drawer = document.getElementById('mobile-menu-drawer');
+            const content = document.getElementById('drawer-content');
+            const backdrop = document.getElementById('drawer-backdrop');
+
+            openBtn.onclick = () => { drawer.classList.remove('pointer-events-none'); content.classList.remove('translate-y-[-100%]'); backdrop.classList.add('opacity-50', 'pointer-events-auto'); document.body.style.overflow = 'hidden'; };
+            closeBtn.onclick = backdrop.onclick = () => { content.classList.add('translate-y-[-100%]'); backdrop.classList.remove('opacity-50', 'pointer-events-auto'); setTimeout(() => { drawer.classList.add('pointer-events-none'); document.body.style.overflow = ''; }, 300); };
+
+            // Accordion Logic
+            const setupAccordion = (tid, mid, iid) => {
+                const btn = document.getElementById(tid);
+                btn?.addEventListener('click', () => { document.getElementById(mid).classList.toggle('hidden'); document.getElementById(iid).classList.toggle('rotate-180'); });
+            };
+            setupAccordion('mobile-homes-toggle', 'mobile-homes-menu', 'homes-icon');
+            setupAccordion('mobile-dashboard-toggle', 'mobile-dashboard-menu', 'dashboard-icon');
+
+            // RTL Logic
+            const toggleRTL = () => {
+                const current = localStorage.getItem('language') === 'ar' ? 'en' : 'ar';
+                localStorage.setItem('language', current);
+                document.documentElement.setAttribute('dir', current === 'ar' ? 'rtl' : 'ltr');
+            };
+            document.getElementById('lang-icon')?.addEventListener('click', toggleRTL);
+            document.getElementById('mobile-lang-icon-drawer')?.addEventListener('click', toggleRTL);
+            if(localStorage.getItem('language') === 'ar') document.documentElement.setAttribute('dir', 'rtl');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up | Orchardix — Craft Cider & Meadery</title>
+<script src="tailwind.js"></script>    <link rel="icon" href="/assets/fav.jpg" type="image/jpeg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        /* --- Orchardix Forest & Amber Palette (exactly from index.html) --- */
+        :root,
+        html[data-theme='light'] {
+            --color-background: #FFFFFF;
+            --color-surface: #F1F5F2;    /* Soft Forest Tint */
+            --color-primary-text: #000000;
+            --color-secondary-text: #4A4A4A;
+            --color-accent: #1F3D2B;      /* Dark Forest Green */
+            --color-accent-light: #E6B325; /* Golden Amber */
+            --color-border: #E5E7EB;
+            --color-input-bg: #FFFFFF;
+            --color-quote-bg: rgba(31, 61, 43, 0.3);
+        }
+
+        html[data-theme='dark'] {
+            --color-background: #0D1A12;   /* Deep Forest Black */
+            --color-surface: #111B14;
+            --color-primary-text: #FFFFFF;
+            --color-secondary-text: #BDBDBD;
+            --color-accent: #2D5A3F;
+            --color-accent-light: #E6B325;
+            --color-border: #1B2E23;
+            --color-input-bg: #0A130E;
+            --color-quote-bg: rgba(230, 179, 37, 0.15);
+        }
+
+        body {
+            background-color: var(--color-background);
+            color: var(--color-primary-text);
+            font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 1.5rem;
+        }
+
+        .font-serif {
+            font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+        }
+
+        .auth-card {
+            background-color: var(--color-surface);
+            border: 1px solid var(--color-border);
+            box-shadow: 0 25px 50px -12px rgba(31, 61, 43, 0.25);
+        }
+
+        .input-field {
+            background-color: var(--color-input-bg);
+            border: 1px solid var(--color-border);
+            color: var(--color-primary-text);
+            transition: all 0.2s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--color-accent-light);
+            box-shadow: 0 0 0 3px rgba(230, 179, 37, 0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #1F3D2B 0%, #2D5A3F 100%);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.95;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px -8px rgba(31, 61, 43, 0.4);
+        }
+
+        /* Floating Controls */
+        .controls {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            display: flex;
+            gap: 0.75rem;
+            z-index: 50;
+        }
+
+        html[dir="rtl"] .controls {
+            right: auto;
+            left: 1.5rem;
+        }
+
+        .btn-control {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--color-background);
+            border: 1px solid var(--color-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--color-primary-text);
+            transition: all 0.2s ease;
+        }
+
+        .btn-control:hover {
+            background-color: var(--color-accent-light);
+            color: var(--color-accent);
+            border-color: var(--color-accent-light);
+        }
+
+        /* Custom Checkbox */
+        .checkbox-custom {
+            accent-color: var(--color-accent-light);
+        }
+
+        /* Forest Overlay for Left Panel */
+        .forest-overlay {
+            background: linear-gradient(135deg, rgba(31, 61, 43, 0.85) 0%, rgba(45, 90, 63, 0.75) 100%);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="controls">
+        <button onclick="toggleRTL()" class="btn-control" title="Toggle RTL">
+            <i class="fas fa-exchange-alt"></i>
+        </button>
+        <button onclick="toggleTheme()" class="btn-control" title="Toggle Dark Mode">
+            <i class="fas fa-moon dark-icon"></i>
+            <i class="fas fa-sun light-icon hidden"></i>
+        </button>
+    </div>
+
+    <div class="relative w-full max-w-5xl">
+        <div class="auth-card w-full flex flex-col md:flex-row rounded-[2rem] min-h-[540px] overflow-hidden">
+
+            <!-- Left Panel: Orchardix Brand & Image -->
+            <div class="hidden md:flex md:w-1/2 relative overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1562601579-599dec564e06?auto=format&fit=crop&q=80&w=2000" 
+                     class="absolute inset-0 w-full h-full object-cover">
+                <div class="absolute inset-0 forest-overlay"></div>
+                <div class="relative z-10 p-8 text-white flex flex-col justify-between h-full">
+                    <div>
+                        <a href="index.html" class="text-3xl font-serif font-extrabold tracking-tight mb-8 block">
+                            <span style="color: #E6B325;">Orchardix</span><span style="color: white;"></span>
+                        </a>
+                        <h2 class="text-3xl lg:text-4xl font-serif font-bold leading-tight mb-3">Join the<br><span
+                                class="text-[#E6B325]">Orchard Club</span></h2>
+                        <p class="text-white/80 text-lg font-light leading-relaxed">Become a member and unlock exclusive access to limited batches, private tastings, and members-only events.</p>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-lg p-6 rounded-2xl border border-white/20">
+                        <p class="text-xs font-bold uppercase tracking-widest text-[#E6B325] mb-2">🍎 Member Benefit</p>
+                        <p class="text-sm leading-relaxed text-white/90 font-medium">Enjoy 10% off your first order + a complimentary tasting flight when you join today.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Sign Up Form -->
+            <div class="w-full md:w-1/2 flex items-center justify-center p-4 sm:p-6 md:p-8 lg:p-10">
+                <div class="w-full max-w-sm">
+
+                    <a href="index.html" class="md:hidden text-3xl font-serif font-extrabold tracking-tight mb-8 text-center block">
+                        <span style="color: #E6B325;">Orchard</span><span style="color: #1F3D2B;">ix</span>
+                    </a>
+
+                    <div class="mb-3 text-center">
+                        <h3 class="text-xl sm:text-2xl lg:text-3xl font-serif font-bold mb-1 text-primary-text">Create
+                            Account</h3>
+                        <p class="text-[10px] sm:text-xs text-secondary-text opacity-70">Start your craft cider journey.</p>
+                    </div>
+
+                    <div class="flex justify-center gap-2 sm:gap-3 mb-3">
+                        <button
+                            class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl border border-border flex items-center justify-center hover:bg-white/50 hover:border-accent-light transition shadow-sm input-field group">
+                            <i class="fab fa-google text-red-500 text-sm sm:text-base group-hover:scale-110 transition"></i>
+                        </button>
+                        <button
+                            class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl border border-border flex items-center justify-center hover:bg-white/50 hover:border-accent-light transition shadow-sm input-field group">
+                            <i class="fab fa-apple text-primary-text text-sm sm:text-base group-hover:scale-110 transition"></i>
+                        </button>
+                        <button
+                            class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl border border-border flex items-center justify-center hover:bg-white/50 hover:border-accent-light transition shadow-sm input-field group">
+                            <i class="fab fa-facebook-f text-blue-600 text-sm sm:text-base group-hover:scale-110 transition"></i>
+                        </button>
+                    </div>
+
+                    <div class="relative flex items-center gap-2 sm:gap-4 mb-3">
+                        <div class="flex-1 h-px bg-border"></div>
+                        <span
+                            class="text-[8px] sm:text-[10px] font-bold uppercase text-secondary-text tracking-widest">OR
+                            EMAIL</span>
+                        <div class="flex-1 h-px bg-border"></div>
+                    </div>
+
+                    <form action="#" class="space-y-1.5 sm:space-y-2" id="signupForm">
+                        <div class="grid grid-cols-2 gap-2 sm:gap-3">
+                            <div>
+                                <label
+                                    class="block text-[9px] sm:text-[10px] font-bold uppercase tracking-widest mb-1 text-secondary-text">First
+                                    Name</label>
+                                <input type="text" required id="firstName"
+                                    class="input-field w-full px-3 py-2 sm:px-4 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm outline-none focus:ring-2 focus:ring-[#E6B325] transition-all"
+                                    placeholder="Eleanor">
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-[9px] sm:text-[10px] font-bold uppercase tracking-widest mb-1 text-secondary-text">Last
+                                    Name</label>
+                                <input type="text" required id="lastName"
+                                    class="input-field w-full px-3 py-2 sm:px-4 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm outline-none focus:ring-2 focus:ring-[#E6B325] transition-all"
+                                    placeholder="Vance">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label
+                                class="block text-[9px] sm:text-[10px] font-bold uppercase tracking-widest mb-1 text-secondary-text">Email
+                                Address</label>
+                            <input type="email" required id="email"
+                                class="input-field w-full px-3 py-2 sm:px-4 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm outline-none focus:ring-2 focus:ring-[#E6B325] transition-all"
+                                placeholder="member@orchardix.com">
+                        </div>
+
+                        <div>
+                            <label
+                                class="block text-[9px] sm:text-[10px] font-bold uppercase tracking-widest mb-1 text-secondary-text">Password</label>
+                            <div class="relative">
+                                <input type="password" required id="password"
+                                    class="input-field w-full px-3 py-2 sm:px-4 sm:py-2.5 pr-10 sm:pr-10 rounded-lg sm:rounded-xl text-xs sm:text-sm outline-none focus:ring-2 focus:ring-[#E6B325] transition-all"
+                                    placeholder="••••••••">
+                                <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center text-secondary-text hover:text-accent-light transition-colors" onclick="togglePasswordVisibility('password', this)">
+                                    <i class="fas fa-eye-slash"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label
+                                class="block text-[9px] sm:text-[10px] font-bold uppercase tracking-widest mb-1 text-secondary-text">Confirm
+                                Password</label>
+                            <div class="relative">
+                                <input type="password" required id="confirmPassword"
+                                    class="input-field w-full px-3 py-2 sm:px-4 sm:py-2.5 pr-10 sm:pr-10 rounded-lg sm:rounded-xl text-xs sm:text-sm outline-none focus:ring-2 focus:ring-[#E6B325] transition-all"
+                                    placeholder="••••••••">
+                                <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center text-secondary-text hover:text-accent-light transition-colors" onclick="togglePasswordVisibility('confirmPassword', this)">
+                                    <i class="fas fa-eye-slash"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-1.5 sm:gap-2 py-0.5 mt-1 text-left">
+                            <input type="checkbox" required id="terms"
+                                class="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded checkbox-custom shrink-0">
+                            <label for="terms"
+                                class="text-[8px] sm:text-[10px] leading-tight uppercase font-bold opacity-60 cursor-pointer">
+                                I agree to the
+                                <a href="#" class="text-accent-light hover:underline">Terms of Service</a>
+                                and
+                                <a href="#" class="text-accent-light hover:underline">Privacy Policy</a>
+                            </label>
+                        </div>
+                        <button type="submit"
+                            class="btn-primary w-full py-2.5 sm:py-2.5 rounded-lg sm:rounded-xl text-white font-bold text-xs sm:text-base shadow-lg mt-1 sm:mt-0.5">
+                            Join Orchardix
+                        </button>
+                    </form>
+
+                    <p class="text-xs sm:text-sm mt-3 text-center text-secondary-text">
+                        Already have an account? <a href="login.html" class="text-accent-light font-bold hover:underline">Sign
+                            In</a>
+                    </p>
+                    
+                    <p class="text-[9px] text-center text-secondary-text/60 mt-3">
+                        <i class="fas fa-apple-alt text-accent-light mr-1"></i> Free shipping on your first order
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const current = html.getAttribute('data-theme');
+            const target = current === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', target);
+            localStorage.setItem('theme', target);
+            updateIcons();
+        }
+
+        function toggleRTL() {
+            const html = document.documentElement;
+            const current = html.getAttribute('dir');
+            const target = current === 'ltr' ? 'rtl' : 'ltr';
+            html.setAttribute('dir', target);
+            localStorage.setItem('dir', target);
+        }
+
+        function updateIcons() {
+            const theme = document.documentElement.getAttribute('data-theme');
+            document.querySelectorAll('.light-icon').forEach(el => el.classList.toggle('hidden', theme !== 'dark'));
+            document.querySelectorAll('.dark-icon').forEach(el => el.classList.toggle('hidden', theme !== 'light'));
+        }
+
+        document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
+        document.documentElement.setAttribute('dir', localStorage.getItem('dir') || 'ltr');
+        updateIcons();
+
+        // Toggle password visibility
+        function togglePasswordVisibility(inputId, button) {
+            const input = document.getElementById(inputId);
+            const icon = button.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            }
+        }
+
+        // Handle signup submission
+        document.getElementById('signupForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const termsAccepted = document.getElementById('terms').checked;
+            
+            if (!firstName || !lastName || !email || !password) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                alert('Passwords do not match. Please try again.');
+                return;
+            }
+            
+            if (password.length < 6) {
+                alert('Password must be at least 6 characters long.');
+                return;
+            }
+            
+            if (!termsAccepted) {
+                alert('Please accept the Terms of Service and Privacy Policy to continue.');
+                return;
+            }
+            
+            // Store user data
+            const userData = {
+                firstName: firstName,
+                lastName: lastName,
+                email: email,
+                memberSince: new Date().toLocaleDateString(),
+                memberTier: 'Gold Member',
+                points: 500
+            };
+            
+            localStorage.setItem('orchardixUser', JSON.stringify(userData));
+            sessionStorage.setItem('userLoggedIn', 'true');
+            sessionStorage.setItem('userEmail', email);
+            sessionStorage.setItem('userName', `${firstName} ${lastName}`);
+            
+            alert(`Welcome to Orchardix, ${firstName}! 🍎\n\nYour account has been created successfully. Check your email for a welcome gift.`);
+            
+            window.location.href = 'userdash.html';
+        });
+    </script>
+</body>
+
+</html>

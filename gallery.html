@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/assets/fav.jpg" type="image/jpeg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <title>Orchardix | Craft Cider & Meadery Company</title>
+
+<script src="tailwind.js"></script>    <style>
+        /* --- CSS Variables for Forest & Amber Palette --- */
+        :root, html[data-theme='light'] {
+            --color-background: #FFFFFF;
+            --color-primary-text: #000000;
+            --color-secondary-text: #4A4A4A;
+            --color-accent: #1F3D2B; /* Dark Forest Green */
+            --color-accent-light: #E6B325; /* Golden Amber */
+            --color-border: #E5E7EB; 
+            --color-hover: #F1F5F2; /* Soft Forest Tint */
+            --color-footer-bg: #1F3D2B; /* Dark Forest */
+            --color-footer-text: #EAEAEA; 
+        }
+        html[data-theme='dark'] {
+            --color-background: #0D1A12; /* Deep Forest Black */
+            --color-primary-text: #FFFFFF;
+            --color-secondary-text: #BDBDBD;
+            --color-accent: #2D5A3F; /* Lighter Forest */
+            --color-accent-light: #E6B325; 
+            --color-border: #1B2E23; 
+            --color-hover: #1B2E23;
+            --color-footer-bg: #000000;
+            --color-footer-text: #FFFFFF;
+        }
+        
+        body {
+            background-color: var(--color-background);
+            color: var(--color-primary-text);
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+            overflow-x: hidden;
+        }
+        
+        /* Utility Class Aliases */
+        .text-primary-text { color: var(--color-primary-text); }
+        .text-secondary-text { color: var(--color-secondary-text); }
+        .text-accent { color: var(--color-accent); }
+        .text-accent-light { color: var(--color-accent-light); }
+        .bg-background { background-color: var(--color-background); }
+        .bg-hover { background-color: var(--color-hover); }
+        .border-border { border-color: var(--color-border); }
+
+        /* Updated Gradients */
+        .bg-ocean-gradient {
+            background: linear-gradient(135deg, #1F3D2B 0%, #2D5A3F 100%);
+        }
+        .bg-coral-gradient {
+            background: linear-gradient(135deg, #E6B325 0%, #F4D06F 100%);
+        }
+
+        /* Footer Specific Overrides */
+        #main-footer {
+            background-color: var(--color-footer-bg);
+            color: var(--color-footer-text);
+        }
+        #main-footer .footer-heading {
+            color: var(--color-accent-light) !important;
+        }
+        #main-footer .footer-link:hover {
+            color: var(--color-accent-light);
+            padding-left: 4px;
+        }
+
+        /* Nav Link Underline Animation */
+        .nav-link {
+            position: relative;
+            transition: color 0.3s;
+            padding-top: 0.25rem;
+            padding-bottom: 0.25rem;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            left: 0; right: 0; bottom: 0;
+            height: 2px;
+            background-color: var(--color-accent-light);
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+        .nav-link:hover::after, .nav-link.active::after {
+            transform: scaleX(1);
+        }
+        .nav-link.active, .nav-link:hover {
+            color: var(--color-accent-light) !important;
+        }
+
+        /* DROPDOWN Logic */
+        .dropdown-wrapper { position: relative; }
+        .dropdown-wrapper::before {
+            content: '';
+            position: absolute;
+            left: 0; right: 0; height: 20px;
+            bottom: 100%;
+            z-index: 100;
+            background: transparent;
+        }
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 5px);
+            left: 0;
+            background-color: var(--color-background);
+            border: 1px solid var(--color-border);
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            min-width: 220px;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+        .dropdown-wrapper:hover .dropdown-menu {
+            opacity: 1; visibility: visible; transform: translateY(0);
+            display: block;
+        }
+        .dropdown-menu a {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: var(--color-primary-text);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid var(--color-border);
+        }
+        .dropdown-menu a:last-child { border-bottom: none; }
+        .dropdown-menu a:hover {
+            background-color: var(--color-hover);
+            color: var(--color-accent-light);
+            padding-left: 1.25rem;
+        }
+
+        /* Dynamic Booking Button - Updated to Forest/Amber */
+        .book-btn {
+            background-color: var(--color-accent); 
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        html[data-theme='dark'] .book-btn {
+            background-color: var(--color-accent-light); 
+            color: #000;
+        }
+
+        .book-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(31, 61, 43, 0.3);
+        }
+
+        @media (max-width: 1024px) {
+            .dropdown-menu { position: static; display: none; opacity: 1; visibility: visible; transform: none; box-shadow: none; }
+            .dropdown-wrapper:hover .dropdown-menu { display: block; }
+        }
+
+        /* ===== DARK MODE OVERRIDES FOR HARDCODED COLORS ===== */
+        html[data-theme='dark'] .text-accent {
+            color: var(--color-accent-light) !important;
+        }
+        html[data-theme='dark'] .bg-white,
+        html[data-theme='dark'] section.bg-white,
+        html[data-theme='dark'] section.py-20.bg-white,
+        html[data-theme='dark'] section.py-24.bg-white,
+        html[data-theme='dark'] section.py-12.bg-white {
+            background-color: var(--color-background) !important;
+        }
+        html[data-theme='dark'] .bg-\[\#F9FAF9\] {
+            background-color: var(--color-hover) !important;
+        }
+        html[data-theme='dark'] .text-\[\#1F3D2B\],
+        html[data-theme='dark'] h2.text-\[\#1F3D2B\] {
+            color: var(--color-primary-text) !important;
+        }
+        html[data-theme='dark'] .text-gray-500,
+        html[data-theme='dark'] .text-gray-400 {
+            color: var(--color-secondary-text) !important;
+        }
+        /* Gallery filter buttons */
+        html[data-theme='dark'] button.text-gray-400 {
+            color: var(--color-secondary-text) !important;
+        }
+        html[data-theme='dark'] button.text-gray-400:hover {
+            color: var(--color-primary-text) !important;
+            background-color: var(--color-hover) !important;
+        }
+        html[data-theme='dark'] button.bg-\[\#E6B325\] {
+            background-color: var(--color-accent-light) !important;
+            color: var(--color-accent) !important;
+        }
+        /* Sticky filter bar */
+        html[data-theme='dark'] .py-12.bg-white.border-b {
+            background-color: var(--color-background) !important;
+            border-color: var(--color-border) !important;
+        }
+    </style>
+</head>
+<body class="antialiased flex flex-col min-h-screen">
+
+    <header class="sticky top-0 z-50 transition-colors duration-300 shadow-xl border-b border-border bg-background" id="main-header">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between h-[70px]">
+            <a href="index.html" class="text-3xl font-serif font-extrabold tracking-tight text-accent-light">    
+                Orchardix
+            </a>
+
+            <div class="hidden xl:flex items-center space-x-6">
+                <div class="flex space-x-6 rtl:space-x-reverse rtl:ml-6 text-primary-text font-medium">
+                    <div class="dropdown-wrapper">
+                        <button class="nav-link flex items-center font-semibold">
+                            Home
+                            <svg class="w-3 h-3 ml-1 relative top-[2.5px] transition-transform duration-200 text-primary-text" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="index.html">Home 1</a>
+                            <a href="home2.html">Home 2</a>
+                        </div>
+                    </div>
+                    <a href="booking.html" class="nav-link">Book Now</a>
+                    <a href="services.html" class="nav-link">Services</a>
+                    <a href="gallery.html" class="nav-link active">Gallery</a>
+                    <a href="about.html" class="nav-link">About</a>
+                    <a href="contact.html" class="nav-link">Contact</a>
+                    
+                    <div class="dropdown-wrapper">
+                        <button class="nav-link flex items-center text-primary-text">
+                            Dashboard
+                            <svg class="w-3 h-3 ml-1 relative top-[2.5px] transition-transform duration-200 text-primary-text" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="userdash.html">User Dashboard</a>
+                            <a href="dashboard.html">Admin Dashboard</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="w-px h-6 bg-border mx-3"></div>
+                
+                <div class="flex items-center space-x-4 rtl:space-x-reverse rtl:mr-4">
+                    <button id="theme-toggle" class="icon-btn text-primary-text hover:text-accent-light p-1.5 rounded-full transition duration-200">
+                        <svg class="w-6 h-6 light-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                        <svg class="w-6 h-6 dark-icon hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                    </button>
+                    <button id="lang-icon" class="text-primary-text hover:text-accent-light p-1.5 rounded-full transition duration-200">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3a9 9 0 100 18 9 9 0 000-18zm0 0c2.5 2.8 2.5 12.2 0 15m0-15c-2.5 2.8-2.5 12.2 0 15M3 12h18" /></svg>
+                    </button>
+                    <div class="flex items-center gap-3 ml-3 flex-shrink-0">
+                        <a href="login.html" class="book-btn px-6 py-2.5 rounded-xl font-bold shadow-md transition-all duration-300 hover:scale-105">Login</a>
+                        <a href="signup.html" class="book-btn px-6 py-2.5 rounded-xl font-bold shadow-md transition-all duration-300 hover:scale-105">Sign Up</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="xl:hidden flex items-center space-x-4">
+                <button id="mobile-menu-open" class="icon-btn text-primary-text hover:text-accent-light p-1.5 rounded-full transition duration-200"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg></button>
+            </div>
+        </nav>
+    </header>
+    
+    <main class="flex-grow">
+   <!-- 1️⃣ HERO SECTION -->
+<section class="relative min-h-[60vh] flex items-center justify-center overflow-hidden">
+    <!-- Background Image -->
+    <div class="absolute inset-0 z-0">
+        <img src="/assets/all hero.webp" 
+             alt="Orchardix Visual Journey" 
+             class="w-full h-full object-cover">
+        <!-- Dark Overlay -->
+        <div class="absolute inset-0 bg-black/60"></div>
+    </div>
+
+    <div class="container mx-auto max-w-7xl px-4 relative z-10 text-center">
+        <div class="animate-fadeInUp">
+            <h1 class="font-serif text-4xl md:text-6xl font-bold text-white leading-tight mb-6">
+                A Visual Journey of <span class="text-[#E6B325]">Craft</span>
+            </h1>
+            <p class="font-sans text-lg md:text-xl text-gray-200 max-w-2xl mx-auto leading-relaxed font-light">
+                Explore our orchards, the precision of our brewing process, and the handcrafted elegance of our signature creations.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- 2️⃣ FILTER / CATEGORY TABS -->
+<section class="py-12 bg-white border-b border-gray-100 sticky top-[70px] z-30 shadow-sm">
+    <div class="container mx-auto max-w-7xl px-4">
+        <div class="flex items-center justify-center overflow-x-auto no-scrollbar pb-2 md:pb-0 space-x-4 md:space-x-8">
+            <button data-filter="all" class="filter-btn active px-6 py-2 rounded-full text-sm font-bold tracking-widest uppercase transition-all duration-300 bg-[#E6B325] text-[#1F3D2B]">All</button>
+            <button data-filter="orchards" class="filter-btn px-6 py-2 rounded-full text-sm font-bold tracking-widest uppercase transition-all duration-300 text-gray-400 hover:text-[#1F3D2B] hover:bg-[#F1F5F2]">Orchards</button>
+            <button data-filter="brewing" class="filter-btn px-6 py-2 rounded-full text-sm font-bold tracking-widest uppercase transition-all duration-300 text-gray-400 hover:text-[#1F3D2B] hover:bg-[#F1F5F2]">Brewing</button>
+            <button data-filter="bottles" class="filter-btn px-6 py-2 rounded-full text-sm font-bold tracking-widest uppercase transition-all duration-300 text-gray-400 hover:text-[#1F3D2B] hover:bg-[#F1F5F2]">Bottles</button>
+            <button data-filter="taproom" class="filter-btn px-6 py-2 rounded-full text-sm font-bold tracking-widest uppercase transition-all duration-300 text-gray-400 hover:text-[#1F3D2B] hover:bg-[#F1F5F2]">Taproom</button>
+        </div>
+    </div>
+</section>
+
+<!-- 3️⃣ MAIN GALLERY GRID -->
+<section class="py-20 bg-white">
+    <div class="container mx-auto max-w-7xl px-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Gallery Item 1 -->
+            <div class="gallery-item group relative aspect-square overflow-hidden rounded-2xl shadow-md cursor-pointer" data-category="orchards">
+                <img src="/assets/fff.jpeg" alt="Orchard Morning" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                <div class="absolute inset-0 bg-[#1F3D2B]/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
+                    <span class="text-white font-serif italic text-xl">The Orchard Mist</span>
+                </div>
+            </div>
+
+            <!-- Gallery Item 2 -->
+            <div class="gallery-item group relative aspect-square overflow-hidden rounded-2xl shadow-md cursor-pointer" data-category="taproom">
+                <img src="/assets/item2.jpg" alt="Cider Pouring" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                <div class="absolute inset-0 bg-[#1F3D2B]/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
+                    <span class="text-white font-serif italic text-xl">The Perfect Pour</span>
+                </div>
+            </div>
+
+            <!-- Gallery Item 3 -->
+            <div class="gallery-item group relative aspect-square overflow-hidden rounded-2xl shadow-md cursor-pointer" data-category="orchards">
+                <img src="/assets/item3.jpg" alt="Honey Harvest" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                <div class="absolute inset-0 bg-[#1F3D2B]/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
+                    <span class="text-white font-serif italic text-xl">Golden Wildflower Honey</span>
+                </div>
+            </div>
+
+            <!-- Gallery Item 4 -->
+            <div class="gallery-item group relative aspect-square overflow-hidden rounded-2xl shadow-md cursor-pointer" data-category="brewing">
+                <img src="/assets/item4.jpeg" alt="Aging Barrels" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                <div class="absolute inset-0 bg-[#1F3D2B]/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
+                    <span class="text-white font-serif italic text-xl">French Oak Aging</span>
+                </div>
+            </div>
+
+            <!-- Gallery Item 5 -->
+            <div class="gallery-item group relative aspect-square overflow-hidden rounded-2xl shadow-md cursor-pointer" data-category="brewing">
+                <img src="/assets/item5.jpeg" alt="Brewing Tanks" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                <div class="absolute inset-0 bg-[#1F3D2B]/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
+                    <span class="text-white font-serif italic text-xl">Stainless Steel Precision</span>
+                </div>
+            </div>
+
+            <!-- Gallery Item 6 -->
+            <div class="gallery-item group relative aspect-square overflow-hidden rounded-2xl shadow-md cursor-pointer" data-category="bottles">
+                <img src="/assets/item6.jpg" alt="Bottling Line" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                <div class="absolute inset-0 bg-[#1F3D2B]/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
+                    <span class="text-white font-serif italic text-xl">The Final Seal</span>
+                </div>
+            </div>
+
+            <!-- Gallery Item 7 -->
+            <div class="gallery-item group relative aspect-square overflow-hidden rounded-2xl shadow-md cursor-pointer" data-category="bottles">
+                <img src="/assets/item7.webp" alt="Glass Display" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                <div class="absolute inset-0 bg-[#1F3D2B]/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
+                    <span class="text-white font-serif italic text-xl">Tasting Notes</span>
+                </div>
+            </div>
+
+            <!-- Gallery Item 8 -->
+            <div class="gallery-item group relative aspect-square overflow-hidden rounded-2xl shadow-md cursor-pointer" data-category="taproom">
+                <img src="/assets/item8.jpg" alt="Taproom Decor" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                <div class="absolute inset-0 bg-[#1F3D2B]/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
+                    <span class="text-white font-serif italic text-xl">Our Sanctuary</span>
+                </div>
+            </div>
+
+            <!-- Gallery Item 9 -->
+            <div class="gallery-item group relative aspect-square overflow-hidden rounded-2xl shadow-md cursor-pointer" data-category="orchards">
+                <img src="/assets/jfb.jpeg" alt="Crisp Apples" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                <div class="absolute inset-0 bg-[#1F3D2B]/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
+                    <span class="text-white font-serif italic text-xl">Crisp Apples</span>
+                </div>
+            </div>
+
+            <!-- Gallery Item 10 -->
+            <div class="gallery-item group relative aspect-square overflow-hidden rounded-2xl shadow-md cursor-pointer" data-category="orchards">
+                <img src="/assets/item10.jpg" alt="Golden Hour" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                <div class="absolute inset-0 bg-[#1F3D2B]/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
+                    <span class="text-white font-serif italic text-xl">Golden Hour</span>
+                </div>
+            </div>
+
+            <!-- Gallery Item 11 -->
+            <div class="gallery-item group relative aspect-square overflow-hidden rounded-2xl shadow-md cursor-pointer" data-category="brewing">
+                <img src="/assets/item11.webp" alt="Active Fermentation" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                <div class="absolute inset-0 bg-[#1F3D2B]/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
+                    <span class="text-white font-serif italic text-xl">Active Fermentation</span>
+                </div>
+            </div>
+
+            <!-- Gallery Item 12 -->
+            <div class="gallery-item group relative aspect-square overflow-hidden rounded-2xl shadow-md cursor-pointer" data-category="brewing">
+                <img src="/assets/item12.jpg" alt="Master Brewer" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                <div class="absolute inset-0 bg-[#1F3D2B]/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
+                    <span class="text-white font-serif italic text-xl">Master Brewer</span>
+                </div>
+            </div>
+
+            <!-- Gallery Item 13 -->
+            <div class="gallery-item group relative aspect-square overflow-hidden rounded-2xl shadow-md cursor-pointer" data-category="bottles">
+                <img src="/assets/item13.png" alt="Cider Selection" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                <div class="absolute inset-0 bg-[#1F3D2B]/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
+                    <span class="text-white font-serif italic text-xl">Cider Selection</span>
+                </div>
+            </div>
+
+            <!-- Gallery Item 14 -->
+            <div class="gallery-item group relative aspect-square overflow-hidden rounded-2xl shadow-md cursor-pointer" data-category="bottles">
+                <img src="/assets/item14.png" alt="Fresh Pour" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                <div class="absolute inset-0 bg-[#1F3D2B]/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
+                    <span class="text-white font-serif italic text-xl">Fresh Pour</span>
+                </div>
+            </div>
+
+            <!-- Gallery Item 15 -->
+            <div class="gallery-item group relative aspect-square overflow-hidden rounded-2xl shadow-md cursor-pointer" data-category="taproom">
+                <img src="/assets/item15.jpg" alt="Cheers" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                <div class="absolute inset-0 bg-[#1F3D2B]/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
+                    <span class="text-white font-serif italic text-xl">Cheers</span>
+                </div>
+            </div>
+
+            <!-- Gallery Item 16 -->
+            <div class="gallery-item group relative aspect-square overflow-hidden rounded-2xl shadow-md cursor-pointer" data-category="taproom">
+                <img src="/assets//item16.jpg" alt="The Golden Pint" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                <div class="absolute inset-0 bg-[#1F3D2B]/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
+                    <span class="text-white font-serif italic text-xl">The Golden Pint</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 4️⃣ FEATURED GALLERY (EDITORIAL STYLE) -->
+<section class="py-24 bg-[#F9FAF9]">
+    <div class="container mx-auto max-w-7xl px-4">
+        <div class="text-center mb-16">
+            <h2 class="font-serif text-4xl md:text-5xl font-bold text-[#1F3D2B] mb-4">Moments at Orchardix</h2>
+            <p class="text-gray-500 max-w-xl mx-auto italic">Capturing the soul of the orchard through a cinematic lens.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[300px]">
+            <!-- Large Featured Image -->
+            <div class="md:col-span-2 md:row-span-2 overflow-hidden rounded-2xl shadow-lg group relative">
+                <img src="/assets/dsd.jpeg" alt="Editorial Featured" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105">
+                <div class="absolute bottom-8 left-8 text-white z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    <h4 class="font-serif text-3xl font-bold">Harvest Twilight</h4>
+                    <p class="font-sans text-sm tracking-widest uppercase text-[#E6B325]">Signature Series</p>
+                </div>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            </div>
+
+            <!-- Stacked Small 1 -->
+            <div class="md:col-span-1 overflow-hidden rounded-2xl shadow-lg group relative">
+                <img src="/assets/sfs.jpeg" alt="Barrel Aging Editorial" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+            </div>
+
+            <!-- Stacked Small 2 -->
+            <div class="md:col-span-1 overflow-hidden rounded-2xl shadow-lg group relative">
+                <img src="/assets/dw3.jpeg" alt="Cider Close-up" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+            </div>
+
+            <!-- Wide Image -->
+            <div class="md:col-span-3 overflow-hidden rounded-2xl shadow-lg group relative h-[400px]">
+                <img src="/assets/rr.jpeg" alt="Wide Orchard Landscape" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105">
+                <div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 5️⃣ CALL TO ACTION -->
+<section class="py-24 bg-white">
+    <div class="container mx-auto max-w-7xl px-4">
+        <div class="bg-gradient-to-r from-[#1F3D2B] via-[#2D5A3F] to-[#E6B325] p-16 md:p-24 rounded-[3rem] text-center shadow-3xl relative overflow-hidden">
+            <!-- Decorative Grain Overlay -->
+            <div class="absolute inset-0 opacity-20 pointer-events-none mix-blend-overlay" style="background-image: url('https://www.transparenttextures.com/patterns/natural-paper.png');"></div>
+            
+            <div class="relative z-10">
+                <h2 class="font-serif text-4xl md:text-6xl font-bold text-white mb-6">Experience It in Person</h2>
+                <p class="text-white/80 text-lg md:text-xl max-w-2xl mx-auto mb-12 font-light">
+                    Pictures capture a moment, but a tasting captures a legacy. Visit our orchard and discover the art of cider and mead making first-hand.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-6 justify-center">
+                    <a href="booking.html" class="px-12 py-5 bg-white text-[#1F3D2B] rounded-full font-bold text-xl hover:bg-[#E6B325] hover:text-[#1F3D2B] transition-all duration-300 transform hover:scale-105 shadow-2xl">
+                        Plan Your Visit
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+        </main>
+
+    <div id="mobile-menu-drawer" class="fixed inset-0 z-50 pointer-events-none transition-all duration-300">
+        <div id="drawer-backdrop" class="absolute inset-0 bg-black opacity-0 transition-opacity duration-300 pointer-events-none"></div>
+
+        <div id="drawer-content" class="absolute top-0 left-0 right-0 bg-background rounded-b-2xl shadow-2xl p-6 xl:hidden max-h-[85vh] overflow-y-auto transform translate-y-[-100%] transition-transform duration-300 ease-out">
+            <div class="flex justify-between items-center pb-4 border-b border-border">
+                <a href="index.html" class="text-3xl font-serif font-extrabold tracking-tight text-accent-light">
+                    Orchardix
+                </a>
+                <button id="mobile-menu-close" class="text-primary-text hover:text-accent-light p-1.5 rounded-full transition duration-200">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+
+            <nav class="flex flex-col space-y-2 py-4">
+                <div>
+                    <button class="block text-primary-text font-semibold text-lg py-2 w-full text-left flex justify-between items-center" id="mobile-homes-toggle">
+                        Home <svg class="w-4 h-4 transform transition-transform duration-200 text-primary-text" id="homes-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div id="mobile-homes-menu" class="hidden pl-4 flex flex-col space-y-1 mt-1 border-l-2 border-border rtl:pl-0 rtl:pr-4 rtl:border-l-0 rtl:border-r-2">
+                        <a href="index.html" class="block text-accent hover:text-accent-light transition duration-200 text-base py-1 px-2">Home 1</a>
+                        <a href="home2.html" class="block text-secondary-text hover:text-accent-light transition duration-200 text-base py-1 px-2">Home 2</a>
+                    </div>
+                </div>
+
+                <a href="booking.html" class="block text-primary-text font-semibold text-lg hover:text-accent-light transition duration-200 py-2">Book now</a>
+                <a href="services.html" class="block text-primary-text font-semibold text-lg hover:text-accent-light transition duration-200 py-2">Services</a>
+                <a href="gallery.html" class="block text-accent-light font-semibold text-lg hover:text-accent-light transition duration-200 py-2">Gallery</a>
+                <a href="about.html" class="block text-primary-text font-semibold text-lg hover:text-accent-light transition duration-200 py-2">About</a>
+                <a href="contact.html" class="block text-primary-text font-semibold text-lg hover:text-accent-light transition duration-200 py-2">Contact</a>
+                
+                <div>
+                    <button class="block text-primary-text font-semibold text-lg py-2 w-full text-left flex justify-between items-center" id="mobile-dashboard-toggle">
+                        Dashboard
+                        <svg class="w-4 h-4 transform transition-transform duration-200 text-primary-text" id="dashboard-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div id="mobile-dashboard-menu" class="hidden pl-4 flex flex-col space-y-1 mt-1 border-l-2 border-border rtl:pl-0 rtl:pr-4 rtl:border-l-0 rtl:border-r-2">
+                        <a href="userdash.html" class="block text-secondary-text hover:text-accent-light transition duration-200 text-base py-1 px-2">User Dashboard</a>
+                        <a href="dashboard.html" class="block text-secondary-text hover:text-accent-light transition duration-200 text-base py-1 px-2">Admin Dashboard</a>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="pt-4 border-t border-border mt-4 flex justify-around items-center">
+                <button id="mobile-lang-icon-drawer" class="icon-btn flex flex-col items-center text-primary-text hover:text-accent-light p-2 transition duration-200">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3a9 9 0 100 18 9 9 0 000-18zm0 0c2.5 2.8 2.5 12.2 0 15m0-15c-2.5 2.8-2.5 12.2 0 15M3 12h18" /></svg>
+                    <span class="text-xs mt-1 text-secondary-text">RTL</span>
+                </button>
+              
+                <button id="drawer-theme-toggle" class="icon-btn flex flex-col items-center text-primary-text hover:text-accent-light p-2 transition duration-200">
+                    <svg class="w-6 h-6 light-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                    <svg class="w-6 h-6 dark-icon hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+                    <span class="text-xs mt-1 text-secondary-text">Theme</span>
+                </button>
+            </div>
+            <div class="flex mt-5 gap-5 w-full px-2">
+                <a href="login.html" class="flex-1 book-btn text-center py-2 rounded-xl font-bold text-sm shadow-md">Login</a>
+                <a href="signup.html" class="flex-1 book-btn text-center py-2 rounded-xl font-bold text-sm shadow-md">Sign Up</a>
+            </div>
+        </div>
+    </div>
+
+    <footer id="main-footer" class="pt-20 transition-colors duration-300">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-12 pb-16 border-b border-gray-800">
+                <div class="lg:col-span-2">
+                    <h1 class="text-3xl font-serif font-extrabold tracking-tight text-accent-light">Orchardix</h1>
+                    <p class="text-lg leading-relaxed max-w-sm !text-gray-300">Crafted cider and honey mead from the finest orchard harvests timeless taste crafted for unforgettable moments.
+</p>
+                    <div class="flex space-x-6 mt-10">
+                        <a href="#" class="text-white hover:text-accent-light transition text-xl"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-white hover:text-accent-light transition text-xl"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-white hover:text-accent-light transition text-xl"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                <div>
+                   <h4 class="footer-heading font-bold text-xl mb-6">Our Brews</h4>
+<ul class="space-y-4">
+    <li><a href="#" class="footer-link">Craft Apple Cider</a></li>
+    <li><a href="#" class="footer-link">Traditional Honey Mead</a></li>
+    <li><a href="#" class="footer-link">Seasonal Special Blends</a></li>
+    <li><a href="#" class="footer-link">Limited Reserve Collection</a></li>
+</ul>
+                </div>
+                <div>
+                    <h4 class="footer-heading font-bold text-xl mb-6">Quick Links</h4>
+                    <ul class="space-y-4">
+                        <li><a href="booking.html" class="footer-link">Book Now</a></li>
+                        <li><a href="services.html" class="footer-link">Services</a></li>
+                        <li><a href="gallery.html" class="footer-link">Gallery</a></li>
+                        <li><a href="contact.html" class="footer-link">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="footer-heading font-bold text-xl mb-6">Newsletter</h4>
+                    <p class="text-sm mb-6 !text-gray-300">Subscribe for cider releases, mead tastings, and exclusive offers.
+</p>
+                    <div class="flex flex-col space-y-4">
+                        <input type="email" placeholder="Your email address" class="p-4 text-sm rounded-xl bg-gray-900 border border-gray-800 focus:ring-1 focus:ring-accent-light focus:outline-none text-white" />
+                        <button class="bg-coral-gradient text-black font-bold py-3 rounded-xl transition hover:opacity-90">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+            <div class="py-10 text-center text-gray-500 text-sm">© 2026 Orchardix. All rights reserved.</div>
+        </div>
+    </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const html = document.documentElement;
+
+        // Load saved settings
+        const savedLang = localStorage.getItem('language') || 'en';
+        document.documentElement.setAttribute('dir', savedLang === 'ar' ? 'rtl' : 'ltr');
+
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        applyTheme(savedTheme);
+
+        // --- Theme Logic ---
+        const themeToggles = [
+            document.getElementById('theme-toggle'),
+            document.getElementById('drawer-theme-toggle')
+        ].filter(Boolean);
+        
+        function applyTheme(theme) {
+            html.setAttribute('data-theme', theme);
+            document.querySelectorAll('.light-icon').forEach(i => i.classList.toggle('hidden', theme === 'dark'));
+            document.querySelectorAll('.dark-icon').forEach(i => i.classList.toggle('hidden', theme === 'light'));
+        }
+
+        themeToggles.forEach(btn => btn.addEventListener('click', () => {
+            const next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+            localStorage.setItem('theme', next);
+            applyTheme(next);
+        }));
+
+        // --- Mobile Drawer Logic ---
+        const menuDrawer = document.getElementById('mobile-menu-drawer');
+        const menuContent = document.getElementById('drawer-content');
+        const menuBackdrop = document.getElementById('drawer-backdrop');
+
+        const openDrawer = () => {
+            menuDrawer.classList.remove('pointer-events-none');
+            menuContent.classList.remove('translate-y-[-100%]');
+            menuBackdrop.classList.add('opacity-50', 'pointer-events-auto');
+            document.body.style.overflow = 'hidden';
+        };
+
+        const closeDrawer = () => {
+            menuContent.classList.add('translate-y-[-100%]');
+            menuBackdrop.classList.remove('opacity-50', 'pointer-events-auto');
+            setTimeout(() => { 
+                menuDrawer.classList.add('pointer-events-none'); 
+                document.body.style.overflow = ''; 
+            }, 300);
+        };
+
+        document.getElementById('mobile-menu-open')?.addEventListener('click', openDrawer);
+        document.getElementById('mobile-menu-close')?.addEventListener('click', closeDrawer);
+        menuBackdrop?.addEventListener('click', closeDrawer);
+
+        // --- Accordions ---
+        const setupAccordion = (toggleId, menuId, iconId) => {
+            const toggle = document.getElementById(toggleId);
+            toggle?.addEventListener('click', () => {
+                document.getElementById(menuId)?.classList.toggle('hidden');
+                document.getElementById(iconId)?.classList.toggle('rotate-180');
+            });
+        };
+
+        setupAccordion('mobile-homes-toggle', 'mobile-homes-menu', 'homes-icon');
+        setupAccordion('mobile-dashboard-toggle', 'mobile-dashboard-menu', 'dashboard-icon');
+
+        // --- RTL Logic ---
+        const toggleRTL = () => {
+            const current = localStorage.getItem('language') === 'ar' ? 'en' : 'ar';
+            localStorage.setItem('language', current);
+            document.documentElement.setAttribute('dir', current === 'ar' ? 'rtl' : 'ltr');
+        };
+
+        document.getElementById('lang-icon')?.addEventListener('click', toggleRTL);
+        document.getElementById('mobile-lang-icon-drawer')?.addEventListener('click', toggleRTL);
+
+        // --- Gallery Filter Logic ---
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const galleryItems = document.querySelectorAll('.gallery-item');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Update active button styles
+                filterBtns.forEach(b => {
+                    b.classList.remove('bg-[#E6B325]', 'text-[#1F3D2B]', 'active');
+                    b.classList.add('text-gray-400', 'hover:text-[#1F3D2B]', 'hover:bg-[#F1F5F2]');
+                });
+                btn.classList.add('bg-[#E6B325]', 'text-[#1F3D2B]', 'active');
+                btn.classList.remove('text-gray-400', 'hover:text-[#1F3D2B]', 'hover:bg-[#F1F5F2]');
+
+                const filterMode = btn.getAttribute('data-filter');
+
+                galleryItems.forEach(item => {
+                    const category = item.getAttribute('data-category');
+                    if (filterMode === 'all') {
+                        // Show all images in all view
+                        item.style.display = 'block';
+                    } else if (category === filterMode) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Initialize default view to show all images for "All" filter
+        galleryItems.forEach(item => {
+            item.style.display = 'block';
+        });
+    });
+    </script>
+</body>
+</html>
