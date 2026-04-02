@@ -156,6 +156,46 @@
             box-shadow: 0 4px 12px rgba(31, 61, 43, 0.3);
         }
 
+        /* ===== AUTH TOGGLE SWITCH (Desktop Only) ===== */
+        .auth-toggle-wrap { display: none; }
+        @media (min-width: 1280px) { .auth-toggle-wrap { display: flex; align-items: center; } }
+        .auth-toggle-pill {
+            position: relative; display: inline-flex; align-items: center;
+            background-color: var(--color-hover); border: 1px solid var(--color-border);
+            border-radius: 9999px; padding: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08); overflow: hidden;
+        }
+        html[data-theme='dark'] .auth-toggle-pill {
+            background-color: #1B2E23; border-color: #2D5A3F;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+        }
+        .auth-toggle-indicator {
+            position: absolute; top: 4px; bottom: 4px; left: 4px;
+            width: calc(50% - 4px);
+            background-color: var(--color-accent); border-radius: 9999px;
+            transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); z-index: 0;
+            box-shadow: 0 2px 8px rgba(31,61,43,0.25);
+        }
+        html[data-theme='dark'] .auth-toggle-indicator {
+            background-color: var(--color-accent-light);
+            box-shadow: 0 2px 8px rgba(230,179,37,0.3);
+        }
+        .auth-toggle-pill[data-active="signup"] .auth-toggle-indicator { transform: translateX(calc(100%)); }
+        .auth-toggle-tab {
+            position: relative; z-index: 1; display: inline-flex;
+            align-items: center; justify-content: center;
+            padding: 0.45rem 1.2rem; border-radius: 9999px;
+            font-weight: 700; font-size: 0.875rem;
+            color: var(--color-secondary-text); text-decoration: none;
+            transition: color 0.25s ease; white-space: nowrap;
+            min-width: 72px; text-align: center; user-select: none;
+        }
+        .auth-toggle-tab--active { color: #ffffff; }
+        html[data-theme='dark'] .auth-toggle-tab--active { color: #000000; }
+        .auth-toggle-tab:not(.auth-toggle-tab--active):hover { color: var(--color-accent); }
+        html[data-theme='dark'] .auth-toggle-tab:not(.auth-toggle-tab--active):hover { color: var(--color-accent-light); }
+        .auth-toggle-tab:focus-visible { outline: 2px solid var(--color-accent-light); outline-offset: 2px; border-radius: 9999px; }
+
         @media (max-width: 1024px) {
             .dropdown-menu { position: static; display: none; opacity: 1; visibility: visible; transform: none; box-shadow: none; }
             .dropdown-wrapper:hover .dropdown-menu { display: block; }
@@ -270,9 +310,14 @@
     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
 </svg>                    </button>
-                    <div class="flex items-center gap-3 ml-3 flex-shrink-0">
-                        <a href="login.html" class="book-btn px-6 py-2.5 rounded-xl font-bold shadow-md transition-all duration-300 hover:scale-105">Login</a>
-                        <a href="signup.html" class="book-btn px-6 py-2.5 rounded-xl font-bold shadow-md transition-all duration-300 hover:scale-105">Sign Up</a>
+                    <div class="auth-toggle-wrap" role="tablist" aria-label="Authentication options">
+                        <div class="auth-toggle-pill" id="auth-toggle">
+                            <span class="auth-toggle-indicator" id="auth-toggle-indicator" aria-hidden="true"></span>
+                            <a href="login.html" role="tab" id="auth-tab-login"
+                               class="auth-toggle-tab auth-toggle-tab--active" aria-selected="true">Login</a>
+                            <a href="signup.html" role="tab" id="auth-tab-signup"
+                               class="auth-toggle-tab" aria-selected="false">Sign Up</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -948,6 +993,38 @@
 
         document.getElementById('lang-icon')?.addEventListener('click', toggleRTL);
         document.getElementById('mobile-lang-icon-drawer')?.addEventListener('click', toggleRTL);
+
+        // ===== AUTH TOGGLE LOGIC =====
+        (function() {
+            var pill = document.getElementById('auth-toggle');
+            if (!pill) return;
+            var loginTab = document.getElementById('auth-tab-login');
+            var signupTab = document.getElementById('auth-tab-signup');
+            var page = window.location.pathname.split('/').pop() || '';
+            function setActive(tab) {
+                if (tab === 'signup') {
+                    pill.setAttribute('data-active', 'signup');
+                    loginTab.classList.remove('auth-toggle-tab--active'); loginTab.setAttribute('aria-selected','false');
+                    signupTab.classList.add('auth-toggle-tab--active'); signupTab.setAttribute('aria-selected','true');
+                } else {
+                    pill.setAttribute('data-active', 'login');
+                    signupTab.classList.remove('auth-toggle-tab--active'); signupTab.setAttribute('aria-selected','false');
+                    loginTab.classList.add('auth-toggle-tab--active'); loginTab.setAttribute('aria-selected','true');
+                }
+            }
+            setActive(page === 'signup.html' ? 'signup' : 'login');
+           // CLICK + TOGGLE + NAVIGATION
+loginTab.addEventListener('click', function(e) {
+    e.preventDefault();
+    setActive('login');
+    setTimeout(() => { window.location.href = this.getAttribute('href'); }, 800);
+});
+signupTab.addEventListener('click', function(e) {
+    e.preventDefault();
+    setActive('signup');
+    setTimeout(() => { window.location.href = this.getAttribute('href'); }, 200);
+});
+        })();
     });
     </script>
 </body>
