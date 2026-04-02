@@ -261,6 +261,17 @@
         html[data-theme='dark'] .bg-white.shadow {
             background-color: var(--color-hover) !important;
         }
+        /* RTL FIX - ONLY DIRECTION */
+
+
+html[dir="rtl"] .auth-toggle-indicator {
+    left: auto;
+    right: 4px;
+}
+
+html[dir="rtl"] .auth-toggle-pill[data-active="signup"] .auth-toggle-indicator {
+    transform: translateX(-100%);
+}
     </style>
 </head>
 <body class="antialiased flex flex-col min-h-screen">
@@ -930,24 +941,18 @@
                 }
             }
             setActive(page === 'signup.html' ? 'signup' : 'login');
-           // CLICK + TOGGLE + NAVIGATION
-loginTab.addEventListener('click', function(e) {
+loginTab.onclick = function(e) {
     e.preventDefault();
-    setActive('login'); // move toggle first
-
-    setTimeout(() => {
-        window.location.href = this.getAttribute('href');
-    }, 800); // smooth animation delay
-});
-
-signupTab.addEventListener('click', function(e) {
+    e.stopPropagation();
+    setActive('login');
+    setTimeout(() => { window.location.assign('login.html'); }, 300);
+};
+signupTab.onclick = function(e) {
     e.preventDefault();
-    setActive('signup'); // move toggle first
-
-    setTimeout(() => {
-        window.location.href = this.getAttribute('href');
-    }, 200);
-});
+    e.stopPropagation();
+    setActive('signup');
+    setTimeout(() => { window.location.assign('signup.html'); }, 700);
+};
         })();
     });
     </script>

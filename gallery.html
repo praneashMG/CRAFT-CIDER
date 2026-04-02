@@ -188,6 +188,17 @@
         html[data-theme='dark'] .auth-toggle-tab:not(.auth-toggle-tab--active):hover { color: var(--color-accent-light); }
         .auth-toggle-tab:focus-visible { outline: 2px solid var(--color-accent-light); outline-offset: 2px; border-radius: 9999px; }
 
+        /* RTL FIX - ONLY DIRECTION */
+html[dir="rtl"] .auth-toggle-indicator {
+    left: auto;
+    right: 4px;
+}
+
+html[dir="rtl"] .auth-toggle-pill[data-active="signup"] .auth-toggle-indicator {
+    transform: translateX(-100%);
+}
+
+
         @media (max-width: 1024px) {
             .dropdown-menu { position: static; display: none; opacity: 1; visibility: visible; transform: none; box-shadow: none; }
             .dropdown-wrapper:hover .dropdown-menu { display: block; }
@@ -736,17 +747,18 @@
                 }
             }
             setActive(page === 'signup.html' ? 'signup' : 'login');
-           // CLICK + TOGGLE + NAVIGATION
-loginTab.addEventListener('click', function(e) {
+loginTab.onclick = function(e) {
     e.preventDefault();
+    e.stopPropagation();
     setActive('login');
-    setTimeout(() => { window.location.href = this.getAttribute('href'); }, 800);
-});
-signupTab.addEventListener('click', function(e) {
+    setTimeout(() => { window.location.assign('login.html'); }, 300);
+};
+signupTab.onclick = function(e) {
     e.preventDefault();
+    e.stopPropagation();
     setActive('signup');
-    setTimeout(() => { window.location.href = this.getAttribute('href'); }, 200);
-});
+    setTimeout(() => { window.location.assign('signup.html'); }, 700);
+};
         })();
 
         // --- Gallery Filter Logic ---
