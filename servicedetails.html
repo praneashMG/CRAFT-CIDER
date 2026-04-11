@@ -672,12 +672,12 @@ html[dir="rtl"] .auth-toggle-pill[data-active="signup"] .auth-toggle-indicator {
                 <div>
                     <h4 class="footer-heading font-bold text-xl mb-6">Our Brews</h4>
                     <ul class="space-y-4">
-                        <li><a href="service-details.html?service=cider" class="footer-link">Craft Apple Cider</a></li>
-                        <li><a href="service-details.html?service=mead" class="footer-link">Traditional Honey Mead</a>
+                        <li>                        <a href="servicedetails.html?service=cider"  class="footer-link">Craft Apple Cider</a></li>
+                        <li><a href="servicedetails.html?service=mead" class="footer-link">Traditional Honey Mead</a>
                         </li>
-                        <li><a href="service-details.html?service=seasonal" class="footer-link">Seasonal Special
+                        <li><a href="servicedetails.html?service=seasonal" class="footer-link">Seasonal Special
                                 Blends</a></li>
-                        <li><a href="service-details.html?service=tasting" class="footer-link">Limited Reserve
+                        <li><a href="servicedetails.html?service=tasting" class="footer-link">Limited Reserve
                                 Collection</a></li>
                     </ul>
                 </div>
@@ -851,7 +851,7 @@ features: [
                 const relatedGrid = document.getElementById('related-grid');
                 const otherKeys = Object.keys(servicesData).filter(k => k !== key).slice(0, 3);
                 relatedGrid.innerHTML = otherKeys.map(k => `
-                    <a href="service-details.html?service=${k}" class="group bg-white dark:bg-white/5 border border-border rounded-3xl overflow-hidden shadow-md hover:shadow-xl transition-all">
+                    <a href="servicedetails.html?service=${k}" class="group bg-white dark:bg-white/5 border border-border rounded-3xl overflow-hidden shadow-md hover:shadow-xl transition-all">
                         <div class="h-48 overflow-hidden">
                             <img src="${servicesData[k].hero}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                         </div>
